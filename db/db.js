@@ -9,6 +9,7 @@ function db() {
 db.connect = function (callback) {
     var defer = Q.defer();
     var connectStr = config.conString;
+    pg.defaults.ssl = true;
     pg.connect(connectStr, function (err, client, done) {
         if (err) {
             defer.reject(err);

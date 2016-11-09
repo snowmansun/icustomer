@@ -32,7 +32,6 @@
   <ItemGroup>
     <Compile Include="app.js" />
     <Compile Include="db\db.js" />
-    <Compile Include="db\_Base.js" />
     <Compile Include="models\product.js" />
     <Compile Include="routes\index.js" />
     <Compile Include="routes\product.js" />
