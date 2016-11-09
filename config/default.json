@@ -1,0 +1,4 @@
+﻿{
+    "conString": "postgres://oyvxewhtunepmy:Ec5skkDNmi3opI-ehUuOgGFD78@ec2-54-235-254-56.compute-1.amazonaws.com:5432/d5inrcncd9ci7b",
+    "debug": true
+}
