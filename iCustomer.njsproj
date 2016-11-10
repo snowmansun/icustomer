@@ -35,6 +35,7 @@
     <Compile Include="models\product.js" />
     <Compile Include="routes\index.js" />
     <Compile Include="routes\product.js" />
+    <Compile Include="routes\product_attr.js" />
     <Compile Include="routes\users.js" />
     <Compile Include="bin\www" />
     <Content Include="config\default.json" />
