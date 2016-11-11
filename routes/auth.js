@@ -14,9 +14,10 @@ router.get('/login', function (req, res) {
             tel: '021-64682167',
             address: 'NO.21, JALAN 13/10 TAMAN KOPERASI POLIS FASA 1 Kuala Lumpur Malaysia 68100',
             email: 'frank@ebestmobile.com',
-            head_pic:'https://ss1.baidu.com/6ONXsjip0QIZ8tyhnq/it/u=481252135,1456887421&fm=58'
-        }
-    }
+            head_pic: 'https://ss1.baidu.com/6ONXsjip0QIZ8tyhnq/it/u=481252135,1456887421&fm=58'
+        },
+        order_view: 'grid'
+    };
 
     res.json(res_json);
 });
