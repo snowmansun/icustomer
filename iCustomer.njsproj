@@ -31,12 +31,13 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="app.js" />
+    <Compile Include="comm\validate_params.js" />
     <Compile Include="db\db.js" />
     <Compile Include="models\product.js" />
+    <Compile Include="routes\auth.js" />
     <Compile Include="routes\index.js" />
     <Compile Include="routes\product.js" />
-    <Compile Include="routes\product_attr.js" />
-    <Compile Include="routes\users.js" />
+    <Compile Include="routes\outlet.js" />
     <Compile Include="bin\www" />
     <Content Include="config\default.json" />
     <Content Include="package.json" />
@@ -54,6 +55,7 @@
     <Folder Include="filter\" />
     <Folder Include="db\" />
     <Folder Include="models\" />
+    <Folder Include="comm\" />
     <Folder Include="public\" />
     <Folder Include="public\images\" />
     <Folder Include="public\javascripts\" />

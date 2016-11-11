@@ -7,9 +7,9 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 /**************************设置nodejs路由对应的文件***************************/
 var routes = require('./routes/index');
-var users = require('./routes/users');
-var product = require('./routes/product');
-var product_attr = require('./routes/product_attr');
+var route_outlet = require('./routes/outlet');
+var route_product = require('./routes/product');
+var route_auth = require('./routes/auth');
 /**************************express配置模板视图**********************************/
 var app = express();
 
@@ -31,9 +31,9 @@ app.use(require('stylus').middleware(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public')));
 /**************************node路由配置**********************************/
 app.use('/', routes);
-app.use('/users', users);
-app.use('/product', product);
-app.use('/product_attr', product_attr);
+app.use('/outlet', route_outlet);
+app.use('/product', route_product);
+app.use('/auth', route_auth);
 /**************************捕获异常***********************************/
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
