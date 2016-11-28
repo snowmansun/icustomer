@@ -10,7 +10,8 @@ router.get('/info', function (req, res) {
         mobile: '18300000000',
         tel: '021-64682167',
         address: 'LOT 1A LOT1200 JALAN GOMBAK BATU 83/4 GOMBAK UTARA Selangor Malaysia 53100',
-        delivery_day: "2",
+        delivery_day: '2',
+        order_unit:'EA&CS',
         currency: {
             symbol: '$',
             thousand: ',',

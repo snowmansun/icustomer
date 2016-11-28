@@ -3,6 +3,21 @@ var router = express.Router();
 
 /* GET home page. */
 router.post('/login', function (req, res) {
+    var model = {
+        login: {
+            required: true,
+            isnull: false
+        },
+        pwd: {
+            required: true,
+            isnull: false
+        }
+    };
+
+    for (var item in model) {
+
+    }
+
     var res_json = {
         token: "9508f2cfb4e24fd98405e46e847166c1",
         expires_in: "7200",

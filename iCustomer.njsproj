@@ -36,6 +36,7 @@
     <Compile Include="models\product.js" />
     <Compile Include="routes\auth.js" />
     <Compile Include="routes\index.js" />
+    <Compile Include="routes\photo.js" />
     <Compile Include="routes\product.js" />
     <Compile Include="routes\outlet.js" />
     <Compile Include="bin\www" />

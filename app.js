@@ -5,11 +5,6 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-/**************************设置nodejs路由对应的文件***************************/
-var routes = require('./routes/index');
-var route_outlet = require('./routes/outlet');
-var route_product = require('./routes/product');
-var route_auth = require('./routes/auth');
 /**************************express配置模板视图**********************************/
 var app = express();
 
@@ -30,10 +25,11 @@ app.use(cookieParser());
 app.use(require('stylus').middleware(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public')));
 /**************************node路由配置**********************************/
-app.use('/', routes);
-app.use('/outlet', route_outlet);
-app.use('/product', route_product);
-app.use('/auth', route_auth);
+app.use('/', require('./routes/index'));
+app.use('/outlet', require('./routes/outlet'));
+app.use('/product', require('./routes/product'));
+app.use('/auth', require('./routes/auth'));
+app.use('/photo', require('./routes/photo'));
 /**************************捕获异常***********************************/
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
