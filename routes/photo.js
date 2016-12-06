@@ -16,11 +16,12 @@ router.get('/', function (req, res) {
             var length = row.bodylength;
             var content_type = row.contenttype;
 
-            //var buffer = new Buffer(body, 'base64')
 
-            //res.write(bufferBase64);
+
+            var buffer = new Buffer(body.toString(), 'base64').toString();
+
             res.writeHead(200, { 'Content-Type': content_type });
-            res.write(body, 'binary');
+            res.write(buffer, 'base64');
             res.end();
 
         }).catch(function (err) {
