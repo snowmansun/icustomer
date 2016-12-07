@@ -16,13 +16,15 @@ router.get('/', function (req, res) {
             var length = row.bodylength;
             var content_type = row.contenttype;
 
+            var res_json = {
+                content_type: content_type,
+                body: body.toString('base64')
+            };
 
+            res.json(res_json);
 
-            var buffer = new Buffer(body.toString(), 'base64').toString();
-
-            res.writeHead(200, { 'Content-Type': content_type });
-            res.write(buffer, 'base64');
-            res.end();
+            //res.writeHead(200, { 'Content-Type': 'text/html' });
+            //res.end('<img src= \'data:' + content_type + ';base64,' + body +'\' />');
 
         }).catch(function (err) {
             console.error(err);
