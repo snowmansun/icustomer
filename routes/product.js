@@ -8,7 +8,7 @@ router.get('/list', function (req, res) {
     var sql =
         'SELECT' +
         '   productcode AS code,' +
-        '   description AS NAME,' +
+        '   p.description AS NAME,' +
         '   ebmobile__flavor__c AS flavor,' +
         '   ebmobile__pack__c AS package,' +
         '   ebmobile__brand__c AS brand,' +
