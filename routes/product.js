@@ -13,7 +13,8 @@ router.get('/list', function (req, res) {
         '   ebmobile__pack__c AS package,' +
         '   ebmobile__brand__c AS brand,' +
         '   uom.ebmobile__denominator__c as denominator,' +
-        '   sm.sfid as pic,' +
+        //'   sm.sfid as pic,' +
+        '   \'00P2800000208xQEAQ\' as pic,' +
         '   0 as price,' +
         '   0 as must_sku ' +
         'FROM' +
