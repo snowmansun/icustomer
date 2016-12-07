@@ -35,9 +35,27 @@ router.get('/list', function (req, res) {
 
 /* GET home page. */
 router.get('/attr', function (req, res) {
-    var sql_brand = 'SELECT DISTINCT ebmobile__brand__c as name,null as pic from sfdc5sqas.product2 where ebmobile__brand__c is not NULL';
-    var sql_flavor = 'SELECT DISTINCT ebmobile__flavor__c as name,null as pic from sfdc5sqas.product2 where ebmobile__flavor__c is not NULL';
-    var sql_pack = 'SELECT DISTINCT ebmobile__pack__c as name,null as pic from sfdc5sqas.product2 where ebmobile__pack__c is not NULL';
+    //var sql_brand = 'SELECT DISTINCT ebmobile__brand__c as name,null as pic from sfdc5sqas.product2 where ebmobile__brand__c is not NULL';
+    //var sql_flavor = 'SELECT DISTINCT ebmobile__flavor__c as name,null as pic from sfdc5sqas.product2 where ebmobile__flavor__c is not NULL';
+    //var sql_pack = 'SELECT DISTINCT ebmobile__pack__c as name,null as pic from sfdc5sqas.product2 where ebmobile__pack__c is not NULL';
+    var sql_brand = 
+        'SELECT ebMobile__PicklistCode__c, ebMobile__PicklistValue__c, ebMobile__FieldName__c '+
+        '    , ebMobile__ObjectName__c, pm.sfid pic ' +
+        'FROM sfdc5sqas.ebMobile__PickListMaster__c pm ' +
+        'left join sfdc5sqas.attachment  am on am.parentid = pm.sfid ' +
+        'where pm.ebmobile__fieldname__c = \'ebmobile__brand__c\' and pm.ebmobile__objectname__c = \'product2\'';
+    var sql_flavor =
+        'SELECT ebMobile__PicklistCode__c, ebMobile__PicklistValue__c, ebMobile__FieldName__c ' +
+        '    , ebMobile__ObjectName__c, pm.sfid pic ' +
+        'FROM sfdc5sqas.ebMobile__PickListMaster__c pm ' +
+        'left join sfdc5sqas.attachment  am on am.parentid = pm.sfid ' +
+        'where pm.ebmobile__fieldname__c = \'ebmobile__flavor__c\' and pm.ebmobile__objectname__c = \'product2\'';
+    var sql_pack =
+        'SELECT ebMobile__PicklistCode__c, ebMobile__PicklistValue__c, ebMobile__FieldName__c ' +
+        '    , ebMobile__ObjectName__c, pm.sfid pic ' +
+        'FROM sfdc5sqas.ebMobile__PickListMaster__c pm ' +
+        'left join sfdc5sqas.attachment  am on am.parentid = pm.sfid ' +
+        'where pm.ebmobile__fieldname__c = \'ebmobile__pack__c\' and pm.ebmobile__objectname__c = \'product2\'';
 
     var res_json = {
         brand: '',
@@ -58,8 +76,14 @@ router.get('/attr', function (req, res) {
                             res_json.pack = result.rows;
 
                             res.json(res_json);
+                        }).catch(function (err) {
+                            console.error(err);
                         });
+                }).catch(function (err) {
+                    console.error(err);
                 });
+        }).catch(function (err) {
+            console.error(err);
         });
 });
 
