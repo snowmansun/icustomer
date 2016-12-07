@@ -13,12 +13,13 @@ router.get('/list', function (req, res) {
         '   ebmobile__pack__c AS package,' +
         '   ebmobile__brand__c AS brand,' +
         '   uom.ebmobile__denominator__c as denominator,' +
-        '   null as pic,' +
+        '   sm.sfid as pic,' +
         '   0 as price,' +
         '   0 as must_sku ' +
         'FROM' +
         '   sfdc5sqas.product2 p inner join sfdc5sqas.ebmobile__productuom__c uom ' +
         '   on p.sfid = uom.ebmobile__productid__c ' +
+        '   left join sfdc5sqas.attachment  am on am.parentid = p.sfid '+
         'Where ebmobile__uomcode__c= \'EA\' and p.isactive = TRUE';
 
     db.query(sql)
