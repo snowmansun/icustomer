@@ -30,5 +30,35 @@ router.get('/', function (req, res) {
             console.error(err);
         });
 });
+router.get('/list', function (req, res) {
+    if (!req.query.pics)
+        res.json({ err_code: 2, err_msg: 'miss param pics' });
+
+    var picArr = req.query.pics.split(',');
+    var picWhere = '';
+    for (var i = 0; i < picArr.length; i++) {
+        if (picWhere != '')
+            picWhere = picWhere + ',';
+        picWhere = picWhere + '\'' + picArr[i].toString() + '\'';
+    }
+    var sql = 'select sfid pic,contenttype content_type,body from sfdc5sqas.attachment where sfid in (' + picWhere + ')';
+
+    db.query(sql)
+        .then(function (result) {
+            var res_jsons = [];
+            var res_json = {};
+            var rows = result.rows;
+            for (var i = 0; i < rows.length; i++) {
+                res_json.pic = rows[i].pic;
+                res_json.content_type = rows[i].content_type;
+                res_json.body = rows[i].body.toString('base64');
+                res_jsons[i] = res_json;
+            }
+            res.json(res_jsons);
+
+        }).catch(function (err) {
+            console.error(err);
+        });
+});
 
 module.exports = router;
