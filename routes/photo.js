@@ -16,15 +16,20 @@ router.get('/', function (req, res) {
             var length = row.bodylength;
             var content_type = row.contenttype;
 
-            var res_json = {
-                content_type: content_type,
-                body: body.toString('base64')
-            };
+            //返回json对象
+            //var res_json = {
+            //    content_type: content_type,
+            //    body: body.toString()//.toString('base64')
+            //};
+            //res.json(res_json);
 
-            res.json(res_json);
+            //直接输出图片
+            //res.writeHead(200, { 'Content-Type': content_type});
+            //res.end(new Buffer(body.toString(),'base64'), 'binary');
 
-            //res.writeHead(200, { 'Content-Type': 'text/html' });
-            //res.end('<img src= \'data:' + content_type + ';base64,' + body +'\' />');
+            //返回html标签
+            res.writeHead(200, { 'Content-Type': 'text/html' });
+            res.end('<img src=\'data:' + content_type + ';base64,' + body.toString() + '\' />');
 
         }).catch(function (err) {
             console.error(err);
@@ -51,9 +56,12 @@ router.get('/list', function (req, res) {
             for (var i = 0; i < rows.length; i++) {
                 res_json.pic = rows[i].pic;
                 res_json.content_type = rows[i].content_type;
-                res_json.body = rows[i].body.toString('base64');
+                res_json.body = rows[i].body.toString();
                 res_jsons[i] = res_json;
             }
+            //返回html标签
+            //res.writeHead(200, { 'Content-Type': 'text/html' });
+            //res.end('<img src=\'data:' + res_jsons[0].content_type + ';base64,' + res_jsons[0].body.toString() + '\' />');
             res.json(res_jsons);
 
         }).catch(function (err) {
