@@ -17,19 +17,19 @@ router.get('/', function (req, res) {
             var content_type = row.contenttype;
 
             //返回json对象
-            //var res_json = {
-            //    content_type: content_type,
-            //    body: body.toString()//.toString('base64')
-            //};
-            //res.json(res_json);
+            var res_json = {
+                content_type: content_type,
+                body: body.toString()//.toString('base64')
+            };
+            res.json(res_json);
 
             //直接输出图片
             //res.writeHead(200, { 'Content-Type': content_type});
             //res.end(new Buffer(body.toString(),'base64'), 'binary');
 
             //返回html标签
-            res.writeHead(200, { 'Content-Type': 'text/html' });
-            res.end('<img src=\'data:' + content_type + ';base64,' + body.toString() + '\' />');
+            //res.writeHead(200, { 'Content-Type': 'text/html' });
+            //res.end('<img src=\'data:' + content_type + ';base64,' + body.toString() + '\' />');
 
         }).catch(function (err) {
             console.error(err);
