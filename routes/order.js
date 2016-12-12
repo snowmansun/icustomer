@@ -1,0 +1,111 @@
+﻿var express = require('express');
+var router = express.Router();
+var db = require('../db/db');
+
+router.post('/', function (req, res) {
+    //var res_jsons = {
+    //    "order_no": "20161212000001",                      // ebMobile__OrderNumber__c
+    //    "outlet_id": "00128000009h94AAAQ",          // accountid
+    //    "order_type":"Sales Order",                 // Type
+    //    "user_code": "13811981123",                 //
+    //    "order_date": "2016-12-09 15:56",           // ebmobile__orderdate__c
+    //    "qty_cs": "12",                             // ebmobile__totalquantitycs__c
+    //    "qty_ea": "8",                              // ebmobile__totalquantityea__c
+    //    "total_price": "86.4",                      // ebmobile__totalamount__c
+    //    "tax": "10.6",                              // ebmobile__taxamount__c
+    //    "net_price": "87.00",                       // ebmobile__netamount__c
+    //    "discount": "10",                           // ebmobile__discamount__c
+    //    "delivery_date": "2016-12-09",              // ebmobile__deliverydate__c
+    //    "delivery_note": "",                        // ebmobile__deliverynotes__c
+    //    "status":"New",                             // Status
+    //    "items": [                                  
+    //        {                                       
+    //            "product_code": "00000131",         // ebmobile__product2__c
+    //            "uom_code": "cs",                   // ebmobile__uomcode__c
+    //            "qty": "8",                         // ebmobile__orderquantity__c
+    //            "unit_price": "5.0",                // unitprice
+    //            "discount": "5.2"                   // ebemobile__LineDiscAmount__c
+    //        }
+    //    ]
+    //};
+    var sqlHeader = 'insert into sfdc5sqas."order"(ebMobile__OrderNumber__c,' +
+        '                              accountid,' +
+        '                              TYPE,' +
+        '                              ebmobile__orderdate__c,' +
+        '                              ebmobile__totalquantitycs__c,' +
+        '                              ebmobile__totalquantityea__c,' +
+        '                              ebmobile__totalamount__c,' +
+        '                              ebmobile__taxamount__c,' +
+        '                              ebmobile__netamount__c,' +
+        '                              ebmobile__discamount__c,' +
+        '                              ebmobile__deliverydate__c,' +
+        '                              ebmobile__deliverynotes__c,' +
+        '                              Status,' +
+        '                              ebmobile__isactive__c)' +
+        '                  VALUES(\'' + req.body.order_no + '\',' +
+        '                        \'' + req.body.outlet_id + '\',' +
+        '                        \'' + req.body.order_type + '\',' +
+        '                        \'' + req.body.order_date + '\',' +
+        '                        ' + req.body.qty_cs + ',' +
+        '                        ' + req.body.qty_ea + ',' +
+        '                        ' + req.body.total_price + ',' +
+        '                        ' + req.body.tax + ',' +
+        '                        ' + req.body.net_price + ',' +
+        '                        ' + req.body.discount + ',' +
+        '                        \'' + req.body.delivery_date + '\',' +
+        '                        \'' + req.body.delivery_note + '\',' +
+        '                        \'' + req.body.status + '\',' +
+        '                        TRUE)';
+    db.query(sqlHeader).then(function (result) {
+        var sqlItem = '';
+        var sqlProduct = '';
+        var items = req.body.items
+        items.forEach(function (item) {
+            sqlProduct = 'select sfid from sfdc5sqas.product2 where productcode=\'' + item.product_code + '\' limit 1'
+            db.query(sqlProduct).then(function (resPId) {
+                if (resPId.rows.length > 0) {
+                    var pId = resPId.rows[0].sfid;
+                    sqlItem = 'insert into sfdc5sqas.orderitem(ebMobile__OrderNumber__c,' +
+                        '					 ebmobile__product2__c,' +
+                        '                       ebmobile__uomcode__c,' +
+                        '                       ebmobile__orderquantity__c,' +
+                        '                       unitprice,' +
+                        '                       ebMobile__LineDiscAmount__c)' +
+                        '               values(\'' + req.body.order_no + '\',' +
+                        '                      \'' + pId + '\',' +
+                        '                      \'' + item.uom_code + '\',' +
+                        '                      \'' + item.qty + '\',' +
+                        '                      \'' + item.unit_price + '\',' +
+                        '                      \'' + item.discount + '\')';
+                    db.query(sqlItem);
+                }
+            });
+        });
+        //for (var i = 0; i < items.length; i++) {
+        //    sqlProduct = 'select sfid from sfdc5sqas.product2 where productcode=\'' + items[i].product_code + '\' limit 1'
+        //    db.query(sqlProduct).then(function (resPId) {
+        //        if (resPId.rows.length > 0) {
+        //            var pId = resPId.rows[0].sfid;
+        //            sqlItem = 'insert into sfdc5sqas.orderitem(ebMobile__OrderNumber__c,' +
+        //                '					 ebmobile__product2__c,' +
+        //                '                       ebmobile__uomcode__c,' +
+        //                '                       ebmobile__orderquantity__c,' +
+        //                '                       unitprice,' +
+        //                '                       ebemobile__LineDiscAmount__c)' +
+        //                '               values(\'' + req.body.order_no + '\',' +
+        //                '                      \'' + pId + '\',' +
+        //                '                      \'' + items[i].uom_code + '\',' +
+        //                '                      \'' + items[i].qty + '\',' +
+        //                '                      \'' + items[i].unit_price + '\',' +
+        //                '                      \'' + items[i].discount + '\')';
+        //            db.query(sqlItem);
+        //        }
+        //    });
+        //}
+        res.json({ status: 'insert success!' });
+    }).catch(function (err) {
+        res.json({ err_code: 1, err_msg: 'insert failed:' + err.message });
+    });
+
+});
+module.exports = router;

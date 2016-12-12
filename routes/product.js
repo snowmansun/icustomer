@@ -13,14 +13,26 @@ router.get('/list', function (req, res) {
         '   ebmobile__pack__c AS package,' +
         '   ebmobile__brand__c AS brand,' +
         '   uom.ebmobile__denominator__c as denominator,' +
-        //'   sm.sfid as pic,' +
+        //'   am.sfid as pic,' +
         '   \'00P2800000208xQEAQ\' as pic,' +
         '   0 as price,' +
-        '   0 as must_sku ' +
+        '   0 as must_sku, ' +
+        '   case when mh.Id is not null then 1 else 0 end as isMusttohave '+
         'FROM' +
-        '   sfdc5sqas.product2 p inner join sfdc5sqas.ebmobile__productuom__c uom ' +
-        '   on p.sfid = uom.ebmobile__productid__c ' +
-        '   left join sfdc5sqas.attachment  am on am.parentid = p.sfid '+
+        '   sfdc5sqas.product2 p '+
+        '   inner join sfdc5sqas.ebmobile__productuom__c uom on p.sfid = uom.ebmobile__productid__c ' +
+        '   left join sfdc5sqas.ebmobile__musttohave__c mh on mh.ebmobile__Product__c=p.sfid and mh.ebmobile__isActive__c=true '+
+        '   left join ( ' +
+        '       select am.parentid, am.sfid ' +
+        '       from sfdc5sqas.attachment am ' +
+        '       INNER JOIN( ' +
+        '           select productcode, am.parentid, max(am.lastmodifieddate) lastmodifieddate ' +
+        '           from sfdc5sqas.product2 p ' +
+        '		            inner join sfdc5sqas.attachment  am on am.parentid = p.sfid and am.isdeleted = false ' +
+        '           where p.isactive = TRUE ' +
+        '           group by productcode, am.parentid ' +
+        '       ) a on am.parentid = a.parentid and am.lastmodifieddate = a.lastmodifieddate ' +
+		'   ) am on am.parentid = p.sfid  '+
         'Where ebmobile__uomcode__c= \'EA\' and p.isactive = TRUE';
 
     db.query(sql)

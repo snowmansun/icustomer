@@ -22,23 +22,28 @@ router.get('/info', function (req, res) {
         'where at.accountnumber=\'' + req.query.accountnumber + '\'';
     db.query(query)
         .then(function (result) {
-            var res_json = {
-                outlet_id: result.rows[0].outlet_id,
-                code: result.rows[0].code,
-                name: result.rows[0].name,
-                mobile: result.rows[0].mobile,
-                tel: result.rows[0].tel,
-                address: result.rows[0].address,
-                delivery_day: result.rows[0].delivery_day,
-                order_unit: result.rows[0].order_unit,
-                currency: {
-                    symbol: '$',
-                    thousand: ',',
-                    decimal: '2',
-                    position: 'before'
-                }
-            };
-            res.json(res_json);
+            if (result.rows.length > 0) {
+                var res_json = {
+                    outlet_id: result.rows[0].outlet_id,
+                    code: result.rows[0].code,
+                    name: result.rows[0].name,
+                    mobile: result.rows[0].mobile,
+                    tel: result.rows[0].tel,
+                    address: result.rows[0].address,
+                    delivery_day: result.rows[0].delivery_day,
+                    order_unit: result.rows[0].order_unit,
+                    currency: {
+                        symbol: '$',
+                        thousand: ',',
+                        decimal: '2',
+                        position: 'before'
+                    }
+                };
+                res.json(res_json);
+            }
+            else {
+                res.json({ err_code: 2, err_msg: 'no data' });
+            }
         }).catch(function (err) {
             console.error(err);
         });
