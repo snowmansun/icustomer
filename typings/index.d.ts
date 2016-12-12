@@ -8,6 +8,7 @@
 /// <reference path="globals/mime/index.d.ts" />
 /// <reference path="globals/morgan/index.d.ts" />
 /// <reference path="globals/msnodesql/index.d.ts" />
+/// <reference path="globals/node-uuid/index.d.ts" />
 /// <reference path="globals/node/index.d.ts" />
 /// <reference path="globals/pg/index.d.ts" />
 /// <reference path="globals/q/index.d.ts" />

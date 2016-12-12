@@ -21,7 +21,7 @@ router.get('/list', function (req, res) {
         '   case when oi.ebmobile__product2__c is not null then 1 else 0 end as isHistorySku ' +
         'FROM' +
         '   sfdc5sqas.product2 p '+
-        '   inner join sfdc5sqas.ebmobile__productuom__c uom on p.sfid = uom.ebmobile__productid__c ' +
+        '   inner join sfdc5sqas.ebmobile__productuom__c uom on p.sfid = uom.ebmobile__productid__c and uom.ebmobile__isactive__c=true and ebmobile__uomcode__c= \'EA\' ' +
         '   left join ( ' +
         '       select mh.ebmobile__product__c '+
         '       from sfdc5sqas.ebmobile__accountgroupitem__c agi ' +
@@ -51,7 +51,7 @@ router.get('/list', function (req, res) {
         '           group by productcode, am.parentid ' +
         '       ) a on am.parentid = a.parentid and am.lastmodifieddate = a.lastmodifieddate ' +
 		'   ) am on am.parentid = p.sfid  '+
-        'Where ebmobile__uomcode__c= \'EA\' and p.isactive = TRUE';
+        'Where p.isactive = TRUE';
 
     db.query(sql)
         .then(function (result) {

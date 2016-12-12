@@ -75,6 +75,7 @@
     <Folder Include="typings\globals\mime\" />
     <Folder Include="typings\globals\morgan\" />
     <Folder Include="typings\globals\msnodesql\" />
+    <Folder Include="typings\globals\node-uuid\" />
     <Folder Include="typings\globals\node\" />
     <Folder Include="typings\globals\pg\" />
     <Folder Include="typings\globals\q\" />
@@ -94,6 +95,7 @@
     <TypeScriptCompile Include="typings\globals\mime\index.d.ts" />
     <TypeScriptCompile Include="typings\globals\morgan\index.d.ts" />
     <TypeScriptCompile Include="typings\globals\msnodesql\index.d.ts" />
+    <TypeScriptCompile Include="typings\globals\node-uuid\index.d.ts" />
     <TypeScriptCompile Include="typings\globals\node\index.d.ts" />
     <TypeScriptCompile Include="typings\globals\pg\index.d.ts" />
     <TypeScriptCompile Include="typings\globals\q\index.d.ts" />
