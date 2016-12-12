@@ -17,7 +17,8 @@ router.get('/list', function (req, res) {
         //'   am.sfid as pic,' +
         '   \'00P2800000208xQEAQ\' as pic,' +
         '   0 as price,' +
-        '   case when mh.ebmobile__product__c is not null then 1 else 0 end as isMusttohave '+
+        '   case when mh.ebmobile__product__c is not null then 1 else 0 end as isMusttohave, ' +
+        '   case when oi.ebmobile__product2__c is not null then 1 else 0 end as isHistorySku ' +
         'FROM' +
         '   sfdc5sqas.product2 p '+
         '   inner join sfdc5sqas.ebmobile__productuom__c uom on p.sfid = uom.ebmobile__productid__c ' +
@@ -26,8 +27,19 @@ router.get('/list', function (req, res) {
         '       from sfdc5sqas.ebmobile__accountgroupitem__c agi ' +
         '       inner join sfdc5sqas.ebmobile__accountgroup__c ag on agi.ebmobile__accountgroup__c = ag.sfid and ag.ebmobile__type__c = \'RED Survey\' ' +
         '       inner join sfdc5sqas.ebmobile__musttohave__c mh on mh.ebmobile__accountgroup__c = ag.sfid and mh.ebmobile__isActive__c = true ' +
-        '       where agi.ebmobile__account__c = \'' + req.query.accountnumber + '\' ' +
-        '   ) mh on mh.ebmobile__Product__c = p.sfid  '+
+        '       inner join sfdc5sqas.account ac on ac.sfid=agi.ebmobile__account__c '+
+        '       where ac.accountnumber = \'' + req.query.accountnumber + '\' ' +
+        '   ) mh on mh.ebmobile__Product__c = p.sfid  ' +
+        '   left join ( '+
+        '       select oi.ebmobile__product2__c '+
+        '       from sfdc5sqas.orderitem oi ' +
+        '       inner join ( ' +
+        '           select o.ebmobile__ordernumber__c from sfdc5sqas."order" o ' +
+        '           inner join sfdc5sqas.account ac on ac.sfid = o.accountid '+
+        '           where ac.accountnumber= \'' + req.query.accountnumber+'\' '+
+        '           order by o.ebmobile__orderdate__c desc limit 5 ' +
+        '       ) o on oi.ebmobile__ordernumber__c = o.ebmobile__ordernumber__c ' +
+        '   ) oi on oi.ebmobile__product2__c=p.sfid '+
         '   left join ( ' +
         '       select am.parentid, am.sfid ' +
         '       from sfdc5sqas.attachment am ' +
