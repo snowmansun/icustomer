@@ -4,7 +4,8 @@ var db = require('../db/db');
 
 /* GET home page. */
 router.get('/list', function (req, res) {
-    //res.render('index', { title: 'Express' });
+    if (!req.query.accountnumber)
+        res.json({ err_code: 1, err_msg: 'miss param accountnumber' });
     var sql =
         'SELECT' +
         '   productcode AS code,' +
@@ -16,12 +17,17 @@ router.get('/list', function (req, res) {
         //'   am.sfid as pic,' +
         '   \'00P2800000208xQEAQ\' as pic,' +
         '   0 as price,' +
-        '   0 as must_sku, ' +
-        '   case when mh.Id is not null then 1 else 0 end as isMusttohave '+
+        '   case when mh.ebmobile__product__c is not null then 1 else 0 end as isMusttohave '+
         'FROM' +
         '   sfdc5sqas.product2 p '+
         '   inner join sfdc5sqas.ebmobile__productuom__c uom on p.sfid = uom.ebmobile__productid__c ' +
-        '   left join sfdc5sqas.ebmobile__musttohave__c mh on mh.ebmobile__Product__c=p.sfid and mh.ebmobile__isActive__c=true '+
+        '   left join ( ' +
+        '       select mh.ebmobile__product__c '+
+        '       from sfdc5sqas.ebmobile__accountgroupitem__c agi ' +
+        '       inner join sfdc5sqas.ebmobile__accountgroup__c ag on agi.ebmobile__accountgroup__c = ag.sfid and ag.ebmobile__type__c = \'RED Survey\' ' +
+        '       inner join sfdc5sqas.ebmobile__musttohave__c mh on mh.ebmobile__accountgroup__c = ag.sfid and mh.ebmobile__isActive__c = true ' +
+        '       where agi.ebmobile__account__c = \'' + req.query.accountnumber + '\' ' +
+        '   ) mh on mh.ebmobile__Product__c = p.sfid  '+
         '   left join ( ' +
         '       select am.parentid, am.sfid ' +
         '       from sfdc5sqas.attachment am ' +
@@ -51,23 +57,20 @@ router.get('/attr', function (req, res) {
     //var sql_flavor = 'SELECT DISTINCT ebmobile__flavor__c as name,null as pic from sfdc5sqas.product2 where ebmobile__flavor__c is not NULL';
     //var sql_pack = 'SELECT DISTINCT ebmobile__pack__c as name,null as pic from sfdc5sqas.product2 where ebmobile__pack__c is not NULL';
     var sql_brand = 
-        'SELECT ebMobile__PicklistCode__c, ebMobile__PicklistValue__c, ebMobile__FieldName__c '+
-        '    , ebMobile__ObjectName__c, pm.sfid pic ' +
+        'SELECT ebMobile__PicklistValue__c "name", pm.sfid pic ' +
         'FROM sfdc5sqas.ebMobile__PickListMaster__c pm ' +
         'left join sfdc5sqas.attachment  am on am.parentid = pm.sfid ' +
-        'where pm.ebmobile__fieldname__c = \'ebmobile__brand__c\' and pm.ebmobile__objectname__c = \'product2\'';
+        'where pm.ebmobile__fieldname__c = \'ebMobile__Brand__c\' and pm.ebmobile__objectname__c = \'Product2\'';
     var sql_flavor =
-        'SELECT ebMobile__PicklistCode__c, ebMobile__PicklistValue__c, ebMobile__FieldName__c ' +
-        '    , ebMobile__ObjectName__c, pm.sfid pic ' +
+        'SELECT ebMobile__PicklistValue__c "name",pm.sfid pic ' +
         'FROM sfdc5sqas.ebMobile__PickListMaster__c pm ' +
         'left join sfdc5sqas.attachment  am on am.parentid = pm.sfid ' +
-        'where pm.ebmobile__fieldname__c = \'ebmobile__flavor__c\' and pm.ebmobile__objectname__c = \'product2\'';
+        'where pm.ebmobile__fieldname__c = \'ebMobile__Flavor__c\' and pm.ebmobile__objectname__c = \'Product2\'';
     var sql_pack =
-        'SELECT ebMobile__PicklistCode__c, ebMobile__PicklistValue__c, ebMobile__FieldName__c ' +
-        '    , ebMobile__ObjectName__c, pm.sfid pic ' +
+        'SELECT ebMobile__PicklistValue__c "name", pm.sfid pic ' +
         'FROM sfdc5sqas.ebMobile__PickListMaster__c pm ' +
         'left join sfdc5sqas.attachment  am on am.parentid = pm.sfid ' +
-        'where pm.ebmobile__fieldname__c = \'ebmobile__pack__c\' and pm.ebmobile__objectname__c = \'product2\'';
+        'where pm.ebmobile__fieldname__c = \'ebMobile__Pack__c\' and pm.ebmobile__objectname__c = \'Product2\'';
 
     var res_json = {
         brand: '',

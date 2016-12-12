@@ -20,9 +20,14 @@ router.get('/info', function (req, res) {
         'from sfdc5sqas.account at ' +
         'inner join sfdc5sqas.contact ct on at.sfid = ct.accountid and ct.ebmobile__primary__c = true ' +
         'where at.accountnumber=\'' + req.query.accountnumber + '\'';
-    db.query(query)
-        .then(function (result) {
-            if (result.rows.length > 0) {
+    db.query(query).then(function (result) {
+        if (result.rows.length > 0) {
+            query = 'select am.sfid as pic' +
+                ' from sfdc5sqas.ebmobile__accountgroupitem__c agi' +
+                ' inner join sfdc5sqas.ebmobile__accountgroup__c ag on agi.ebmobile__accountgroup__c = ag.sfid and ag.ebmobile__type__c = \'RED Survey\'' +
+                ' inner join sfdc5sqas.attachment am on ag.sfid = am.parentid and am."name" like \'AD_%\'' +
+                ' where agi.ebmobile__account__c = \'' + result.rows[0].outlet_id + '\'';
+            db.query(query).then(function (resPic) {
                 var res_json = {
                     outlet_id: result.rows[0].outlet_id,
                     code: result.rows[0].code,
@@ -32,6 +37,7 @@ router.get('/info', function (req, res) {
                     address: result.rows[0].address,
                     delivery_day: result.rows[0].delivery_day,
                     order_unit: result.rows[0].order_unit,
+                    banner_pic: resPic.rows,
                     currency: {
                         symbol: '$',
                         thousand: ',',
@@ -40,13 +46,16 @@ router.get('/info', function (req, res) {
                     }
                 };
                 res.json(res_json);
-            }
-            else {
-                res.json({ err_code: 2, err_msg: 'no data' });
-            }
-        }).catch(function (err) {
-            console.error(err);
-        });
+            }).catch(function (err) {
+                console.error(err);
+            });
+        }
+        else {
+            res.json({ err_code: 2, err_msg: 'no data' });
+        }
+    }).catch(function (err) {
+        console.error(err);
+    });
 });
 
 module.exports = router;

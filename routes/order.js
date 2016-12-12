@@ -81,27 +81,6 @@ router.post('/', function (req, res) {
                 }
             });
         });
-        //for (var i = 0; i < items.length; i++) {
-        //    sqlProduct = 'select sfid from sfdc5sqas.product2 where productcode=\'' + items[i].product_code + '\' limit 1'
-        //    db.query(sqlProduct).then(function (resPId) {
-        //        if (resPId.rows.length > 0) {
-        //            var pId = resPId.rows[0].sfid;
-        //            sqlItem = 'insert into sfdc5sqas.orderitem(ebMobile__OrderNumber__c,' +
-        //                '					 ebmobile__product2__c,' +
-        //                '                       ebmobile__uomcode__c,' +
-        //                '                       ebmobile__orderquantity__c,' +
-        //                '                       unitprice,' +
-        //                '                       ebemobile__LineDiscAmount__c)' +
-        //                '               values(\'' + req.body.order_no + '\',' +
-        //                '                      \'' + pId + '\',' +
-        //                '                      \'' + items[i].uom_code + '\',' +
-        //                '                      \'' + items[i].qty + '\',' +
-        //                '                      \'' + items[i].unit_price + '\',' +
-        //                '                      \'' + items[i].discount + '\')';
-        //            db.query(sqlItem);
-        //        }
-        //    });
-        //}
         res.json({ status: 'insert success!' });
     }).catch(function (err) {
         res.json({ err_code: 1, err_msg: 'insert failed:' + err.message });
