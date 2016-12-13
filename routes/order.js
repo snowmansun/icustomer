@@ -2,7 +2,7 @@
 var router = express.Router();
 var db = require('../db/db');
 //var uuid = require('node-uuid');
-var sd = require('silly-datetime');
+//var sd = require('silly-datetime');
 
 
 router.post('/', function (req, res) {
@@ -34,7 +34,7 @@ router.post('/', function (req, res) {
     var sql = 'select ebmobile__ordernumber__c from sfdc5sqas."order" where ebmobile__ordernumber__c=\'' + req.body.order_no + '\'';
     db.query(sql).then(function (OrderNumber) {
         if (OrderNumber.rows.length == 0) {
-            var time = sd.format(new Date(), 'YYYY-MM-DD');
+            var time = '2016-12-13';//sd.format(new Date(), 'YYYY-MM-DD');
             //var guid = uuid.v4();
             var sqlHeader = 'insert into sfdc5sqas."order"(ebMobile__OrderNumber__c,' +
                // '                              ebmobile__guid__c,' +
