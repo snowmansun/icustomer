@@ -1,6 +1,10 @@
 {
   "name": "i-customer",
   "version": "0.0.0",
+  "engines": {
+    "node": "4.4.0",
+    "npm": "2.1.x" 
+  }, 
   "private": true,
   "scripts": {
     "start": "node ./bin/www"
