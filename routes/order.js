@@ -36,95 +36,102 @@ router.post('/', function (req, res) {
         if (OrderNumber.rows.length == 0) {
             var time = sd.format(new Date(), 'YYYY-MM-DD');
             var guid = uuid.v4();
-            var orderNumber = '00005002';
-            var sqlHeader = 'insert into sfdc5sqas."order"(ebMobile__OrderNumber__c,' +
-                '                              ebMobile__ERPOrderNumber__c,' +
-                '                              orderNumber,' +
-                '                              ebmobile__guid__c,' +
-                '                              accountid,' +
-                '                              TYPE,' +
-                '                              ebmobile__orderdate__c,' +
-                '                              ebmobile__totalquantitycs__c,' +
-                '                              ebmobile__totalquantityea__c,' +
-                '                              ebmobile__totalamount__c,' +
-                '                              ebmobile__taxamount__c,' +
-                '                              ebmobile__netamount__c,' +
-                '                              ebmobile__discamount__c,' +
-                '                              ebmobile__deliverydate__c,' +
-                '                              ebmobile__deliverynotes__c,' +
-                '                              Status,' +
-                '                              ebmobile__isactive__c, ' +
-                '                              effectivedate)' +
-                '                  VALUES(\'' + req.body.order_no + '\',' +
-                '                        \'' + orderNumber + '\',' +
-                '                        \'' + orderNumber + '\',' +
-                '                        \'' + guid + '\',' +
-                '                        \'' + req.body.outlet_id + '\',' +
-                '                        \'' + req.body.order_type + '\',' +
-                '                        \'' + req.body.order_date + '\',' +
-                '                        ' + req.body.qty_cs + ',' +
-                '                        ' + req.body.qty_ea + ',' +
-                '                        ' + req.body.total_price + ',' +
-                '                        ' + req.body.tax + ',' +
-                '                        ' + req.body.net_price + ',' +
-                '                        ' + req.body.discount + ',' +
-                '                        \'' + req.body.delivery_date + '\',' +
-                '                        \'' + req.body.delivery_note + '\',' +
-                '                        \'' + req.body.status + '\',' +
-                '                        TRUE,' +
-                '                        \'' + time + '\')';
-            db.query(sqlHeader).then(function (result) {
-                var sqlItem = '';
-                var sqlProduct = '';
-                var items = req.body.items
-                var i = 0;
-                items.forEach(function (item) {
-                    sqlProduct = 'select sfid from sfdc5sqas.product2 where productcode=\'' + item.product_code + '\' limit 1'
-                    db.query(sqlProduct).then(function (resPId) {
-                        if (resPId.rows.length > 0) {
-                            i++;
-                            //guid = uuid.v4();
-                            var pId = resPId.rows[0].sfid;
-                            var itemSequence = ('00000' + (i * 10).toString());
-                            itemSequence = itemSequence.substring(itemSequence.length - 5, itemSequence.length);
-                            var erpOrderNumber = orderNumber +'_'+ itemSequence;
-                            sqlItem = 'insert into sfdc5sqas.orderitem(ebMobile__OrderNumber__c,' +
-                               // '                       ebmobile__guid__c,' +
-                                '					    ebmobile__product2__c,' +
-                                '                       ebmobile__orderdate__c,' +
-                                '                       ebmobile__uomcode__c,' +
-                                '                       ebmobile__orderquantity__c,' +
-                                '                       quantity,' +
-                                '                       unitprice,' +
-                                '                       ebmobile__isactive__c,' +
-                                '                       isdeleted,' +
-                                '                       ebmobile__orderitemstatus__c,' +
-                                '                       ebMobile__LineDiscAmount__c,' +
-                                '                       ebMobile__ERPOrderNumber__c,' +
-                                '                       ebMobile__ItemSequence__c)' +
-                                '               values(\'' + req.body.order_no + '\',' +
-                               // '                      \'' + guid + '\',' +
-                                '                      \'' + pId + '\',' +
-                                '                      \'' + req.body.order_date + '\',' +
-                                '                      \'' + item.uom_code + '\',' +
-                                '                      \'' + item.qty + '\',' +
-                                '                      \'' + item.qty + '\',' +
-                                '                      \'' + item.unit_price + '\',' +
-                                '                      true,' +
-                                '                      false,' +
-                                '                      \'New\',' +
-                                '                      \'' + item.discount + '\',' +
-                                '                      \'' + erpOrderNumber + '\',' +
-                                '                      \'' + itemSequence+'\')';
-                            db.query(sqlItem); 
-                        }
-                    }).catch(function (err) {
-                        console.error(err);
+            sql = 'select cast(max(ordernumber) as int)+1 ordernumber from sfdc5sqas."order"';
+            db.query(sql).then(function (maxNo) {
+                var orderNumber = '00000001';
+                if (maxNo.rows.length > 0) {
+                    orderNumber = '00000000' + maxNo.rows[0].ordernumber;
+                    orderNumber = orderNumber.substring(orderNumber.length - 8, orderNumber.length);
+                }
+                var sqlHeader = 'insert into sfdc5sqas."order"(ebMobile__OrderNumber__c,' +
+                   // '                              ebMobile__ERPOrderNumber__c,' +
+                   // '                              orderNumber,' +
+                    '                              ebmobile__guid__c,' +
+                    '                              accountid,' +
+                    '                              TYPE,' +
+                    '                              ebmobile__orderdate__c,' +
+                    '                              ebmobile__totalquantitycs__c,' +
+                    '                              ebmobile__totalquantityea__c,' +
+                    '                              ebmobile__totalamount__c,' +
+                    '                              ebmobile__taxamount__c,' +
+                    '                              ebmobile__netamount__c,' +
+                    '                              ebmobile__discamount__c,' +
+                    '                              ebmobile__deliverydate__c,' +
+                    '                              ebmobile__deliverynotes__c,' +
+                    '                              Status,' +
+                    '                              ebmobile__isactive__c, ' +
+                    '                              effectivedate)' +
+                    '                  VALUES(\'' + req.body.order_no + '\',' +
+                   // '                        \'' + orderNumber + '\',' +
+                   // '                        \'' + orderNumber + '\',' +
+                    '                        \'' + guid + '\',' +
+                    '                        \'' + req.body.outlet_id + '\',' +
+                    '                        \'' + req.body.order_type + '\',' +
+                    '                        \'' + req.body.order_date + '\',' +
+                    '                        ' + req.body.qty_cs + ',' +
+                    '                        ' + req.body.qty_ea + ',' +
+                    '                        ' + req.body.total_price + ',' +
+                    '                        ' + req.body.tax + ',' +
+                    '                        ' + req.body.net_price + ',' +
+                    '                        ' + req.body.discount + ',' +
+                    '                        \'' + req.body.delivery_date + '\',' +
+                    '                        \'' + req.body.delivery_note + '\',' +
+                    '                        \'' + req.body.status + '\',' +
+                    '                        TRUE,' +
+                    '                        \'' + time + '\')';
+                db.query(sqlHeader).then(function (result) {
+                    var sqlItem = '';
+                    var sqlProduct = '';
+                    var items = req.body.items
+                    var i = 0;
+                    items.forEach(function (item) {
+                        sqlProduct = 'select sfid from sfdc5sqas.product2 where productcode=\'' + item.product_code + '\' limit 1'
+                        db.query(sqlProduct).then(function (resPId) {
+                            if (resPId.rows.length > 0) {
+                                i++;
+                                //guid = uuid.v4();
+                                var pId = resPId.rows[0].sfid;
+                                var itemSequence = ('00000' + (i * 10).toString());
+                                itemSequence = itemSequence.substring(itemSequence.length - 5, itemSequence.length);
+                                var erpOrderNumber = orderNumber + '_' + itemSequence;
+                                sqlItem = 'insert into sfdc5sqas.orderitem(ebMobile__OrderNumber__c,' +
+                                    // '                       ebmobile__guid__c,' +
+                                    '					    ebmobile__product2__c,' +
+                                    '                       ebmobile__orderdate__c,' +
+                                    '                       ebmobile__uomcode__c,' +
+                                    '                       ebmobile__orderquantity__c,' +
+                                    '                       quantity,' +
+                                    '                       unitprice,' +
+                                    '                       ebmobile__isactive__c,' +
+                                    '                       isdeleted,' +
+                                    '                       ebmobile__orderitemstatus__c,' +
+                                    '                       ebMobile__LineDiscAmount__c,' +
+                                    //'                       ebMobile__ERPOrderNumber__c,' +
+                                    '                       ebMobile__ItemSequence__c)' +
+                                    '               values(\'' + req.body.order_no + '\',' +
+                                    // '                      \'' + guid + '\',' +
+                                    '                      \'' + pId + '\',' +
+                                    '                      \'' + req.body.order_date + '\',' +
+                                    '                      \'' + item.uom_code + '\',' +
+                                    '                      \'' + item.qty + '\',' +
+                                    '                      \'' + item.qty + '\',' +
+                                    '                      \'' + item.unit_price + '\',' +
+                                    '                      true,' +
+                                    '                      false,' +
+                                    '                      \'New\',' +
+                                    '                      \'' + item.discount + '\',' +
+                                    //'                      \'' + erpOrderNumber + '\',' +
+                                    '                      \'' + itemSequence + '\')';
+                                db.query(sqlItem);
+                            }
+                        }).catch(function (err) {
+                            console.error(err);
+                        });
                     });
+                    res.json({ err_code: 0, err_msg: 'insert success!' });
+                }).catch(function (err) {
+                    res.json({ err_code: 1, err_msg: 'insert failed:' + err.message });
                 });
-                res.json({ err_code: 0, err_msg: 'insert success!' });
-            }).catch(function (err) {
-                res.json({ err_code: 1, err_msg: 'insert failed:' + err.message });
             });
         }
         else {
