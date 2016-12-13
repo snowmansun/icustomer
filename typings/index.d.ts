@@ -15,3 +15,4 @@
 /// <reference path="globals/serve-favicon/index.d.ts" />
 /// <reference path="globals/serve-static/index.d.ts" />
 /// <reference path="globals/stylus/index.d.ts" />
+/// <reference path="globals/uuid/index.d.ts" />

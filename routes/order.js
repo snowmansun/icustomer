@@ -52,7 +52,7 @@ router.post('/', function (req, res) {
                 '                              ebmobile__isactive__c, ' +
                 '                              effectivedate)' +
                 '                  VALUES(\'' + req.body.order_no + '\',' +
-               // '                        \'' + guid + '\',' +
+                '                        \'' + guid + '\',' +
                 '                        \'' + req.body.outlet_id + '\',' +
                 '                        \'' + req.body.order_type + '\',' +
                 '                        \'' + req.body.order_date + '\',' +
@@ -90,7 +90,7 @@ router.post('/', function (req, res) {
                                 '                       ebmobile__orderitemstatus__c,' +
                                 '                       ebMobile__LineDiscAmount__c)' +
                                 '               values(\'' + req.body.order_no + '\',' +
-                               // '                      \'' + guid + '\',' +
+                                '                      \'' + guid + '\',' +
                                 '                      \'' + pId + '\',' +
                                 '                      \'' + req.body.order_date + '\',' +
                                 '                      \'' + item.uom_code + '\',' +
