@@ -134,8 +134,8 @@ router.get('/download', function (req, res) {
     if (!req.query.accountnumber)
         res.json({ err_code: 1, err_msg: 'miss param accountnumber' });
 
-    var sql = 'select ebMobile__OrderNumber__c order_no, ' +
-        '     accountid outlet_id, ' +
+    var sql = 'select o.ebMobile__OrderNumber__c order_no, ' +
+        '     o.accountid outlet_id, ' +
         '     o."type" order_type, ' +
         '     o.ebmobile__orderdate__c order_date, ' +
         '     o.ebmobile__totalquantitycs__c qty_cs, ' +
@@ -146,26 +146,42 @@ router.get('/download', function (req, res) {
         '     o.ebmobile__discamount__c discount, ' +
         '     o.ebmobile__deliverydate__c delivery_date, ' +
         '     o.ebmobile__deliverynotes__c delivery_note, ' +
-        '     o.Status status ' +
-        ' from "order" o ' +
-        ' inner join account a on o.accountid = a.sfid ' +
-        ' where a.accountnumber = \'' + req.query.accountnumber + '\' and ebmobile__orderdate__c> (current_date::timestamp + \'-30 day\')';
+        '     o.Status status, ' + 
+        '     pt.productcode product_code, ' + 
+        '     ebmobile__uomcode__c uom_code, ' + 
+        '     ebmobile__orderquantity__c qty, ' + 
+        '     unitprice unit_price, ' + 
+        '     oi.ebmobile__LineDiscAmount__c discount ' + 
+        ' from sfdc5sqas."order" o ' +
+        '   inner join sfdc5sqas.account a on o.accountid = a.sfid ' +
+        '   inner join sfdc5sqas.orderitem oi on oi.ebmobile__ordernumber__c = o.ebmobile__ordernumber__c ' +
+        '   inner join sfdc5sqas.product2 pt on pt.sfid = oi.ebmobile__product2__c ' +
+        ' where a.accountnumber = \'' + req.query.accountnumber + '\' and o.ebmobile__ordernumber__c like \'20161213000%\' ' +
+        ' and o.ebmobile__orderdate__c> (current_date::timestamp + \'-30 day\') order by o.ebmobile__ordernumber__c';
     db.query(sql).then(function (resOrder) {
         if (resOrder.rows.length > 0) {
+            var obj = resOrder.rows;
             var res_jsons = [];
-            var count = 0;
-            resOrder.forEach(function (row) {
-                var query = 'SELECT ebmobile__ordernumber__c order_no, ' +
-                    '     pt.productcode product_code, ' +
-                    '     ebmobile__uomcode__c uom_code, ' +
-                    '     ebmobile__orderquantity__c qty, ' +
-                    '     unitprice unit_price, ' +
-                    '     oi.ebmobile__LineDiscAmount__c discount ' +
-                    ' from orderitem oi ' +
-                    ' inner join product2 pt on pt.sfid = oi.ebmobile__product2__c ' +
-                    ' where ebmobile__ordernumber__c= \'' + row.order_no + '\'';
-                db.query(query).then(function (resItem) {
-                    var res_json = {
+            var lastOrderNumber = '';
+            var res_json = {};
+            obj.forEach(function (row) {
+                if (lastOrderNumber == row.order_no) {
+                    var itemJson = {
+                        "product_code": row.product_code,
+                        "uom_code": row.uom_code,
+                        "qty": row.qty,
+                        "unit_price": row.unit_price,
+                        "discount": row.discount
+                    };
+                    res_json.items.push(itemJson);
+                }
+                else {
+                    if (lastOrderNumber !== '') {
+                        res_jsons.push(res_json);
+                        res_json = {};
+                    }
+
+                    res_json = {
                         "order_no": row.order_no,
                         "outlet_id": row.outlet_id,
                         "order_type": row.order_type,
@@ -180,20 +196,26 @@ router.get('/download', function (req, res) {
                         "delivery_date": row.delivery_date,
                         "delivery_note": row.delivery_note,
                         "status": row.status,
-                        "items": resItem.rows
+                        "items": [
+                            {
+                                "product_code": row.product_code,
+                                "uom_code": row.uom_code,
+                                "qty": row.qty,
+                                "unit_price": row.unit_price,
+                                "discount": row.discount
+                            }
+                        ]
                     };
-                    res_jsons[count] = res_json;
-                    count++;
-                }).catch(function (err) {
-                    console.error(err);
-                });
+                }
+                lastOrderNumber = row.order_no;
             });
-
+            res_jsons.push(res_json);
             res.json(res_jsons);
         }
     }).catch(function (err) {
         console.error(err);
     });
+
 });
 
 module.exports = router;
