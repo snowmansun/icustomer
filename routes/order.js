@@ -20,6 +20,7 @@ router.post('/', function (req, res) {
                 '                              ebmobile__totalquantitycs__c,' +
                 '                              ebmobile__totalquantityea__c,' +
                 '                              ebmobile__totalamount__c,' +
+                '                              totalamount,' +
                 '                              ebmobile__taxamount__c,' +
                 '                              ebmobile__netamount__c,' +
                 '                              ebmobile__discamount__c,' +
@@ -36,6 +37,7 @@ router.post('/', function (req, res) {
                 '                        \'' + req.body.order_date + '\',' +
                 '                        ' + req.body.qty_cs + ',' +
                 '                        ' + req.body.qty_ea + ',' +
+                '                        ' + req.body.total_price + ',' +
                 '                        ' + req.body.total_price + ',' +
                 '                        ' + req.body.tax + ',' +
                 '                        ' + req.body.net_price + ',' +
