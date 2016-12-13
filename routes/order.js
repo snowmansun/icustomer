@@ -2,8 +2,7 @@
 var router = express.Router();
 var db = require('../db/db');
 //var uuid = require('node-uuid');
-var sd = require('silly-datetime');
-
+var sd = require('silly-datetime'); 
 
 router.post('/', function (req, res) {
     //var res_jsons = {
