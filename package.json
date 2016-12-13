@@ -2,8 +2,8 @@
   "name": "i-customer",
   "version": "0.0.0",
   "engines": {
-    "node": "4.4.0",
-    "npm": "2.1.x" 
+    "node": "6.9.1",
+    "npm": "3.10.8" 
   }, 
   "private": true,
   "scripts": {
