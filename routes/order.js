@@ -1,7 +1,7 @@
 ﻿var express = require('express');
 var router = express.Router();
 var db = require('../db/db');
-var uuid = require('node-uuid');
+//var uuid = require('node-uuid');
 var sd = require('silly-datetime');
 
 
@@ -35,9 +35,9 @@ router.post('/', function (req, res) {
     db.query(sql).then(function (OrderNumber) {
         if (OrderNumber.rows.length == 0) {
             var time = sd.format(new Date(), 'YYYY-MM-DD');
-            var guid = uuid.v4();
+            //var guid = uuid.v4();
             var sqlHeader = 'insert into sfdc5sqas."order"(ebMobile__OrderNumber__c,' +
-                '                              ebmobile__guid__c,' +
+               // '                              ebmobile__guid__c,' +
                 '                              accountid,' +
                 '                              TYPE,' +
                 '                              ebmobile__orderdate__c,' +
@@ -53,7 +53,7 @@ router.post('/', function (req, res) {
                 '                              ebmobile__isactive__c, ' +
                 '                              effectivedate)' +
                 '                  VALUES(\'' + req.body.order_no + '\',' +
-                '                        \'' + guid + '\',' +
+               // '                        \'' + guid + '\',' +
                 '                        \'' + req.body.outlet_id + '\',' +
                 '                        \'' + req.body.order_type + '\',' +
                 '                        \'' + req.body.order_date + '\',' +
@@ -76,10 +76,10 @@ router.post('/', function (req, res) {
                     sqlProduct = 'select sfid from sfdc5sqas.product2 where productcode=\'' + item.product_code + '\' limit 1'
                     db.query(sqlProduct).then(function (resPId) {
                         if (resPId.rows.length > 0) {
-                            guid = uuid.v4();
+                            //guid = uuid.v4();
                             var pId = resPId.rows[0].sfid;
                             sqlItem = 'insert into sfdc5sqas.orderitem(ebMobile__OrderNumber__c,' +
-                                '                       ebmobile__guid__c,' +
+                                //'                       ebmobile__guid__c,' +
                                 '					    ebmobile__product2__c,' +
                                 '                       ebmobile__orderdate__c,' +
                                 '                       ebmobile__uomcode__c,' +
@@ -91,7 +91,7 @@ router.post('/', function (req, res) {
                                 '                       ebmobile__orderitemstatus__c,' +
                                 '                       ebMobile__LineDiscAmount__c)' +
                                 '               values(\'' + req.body.order_no + '\',' +
-                                '                      \'' + guid + '\',' +
+                               // '                      \'' + guid + '\',' +
                                 '                      \'' + pId + '\',' +
                                 '                      \'' + req.body.order_date + '\',' +
                                 '                      \'' + item.uom_code + '\',' +
@@ -102,11 +102,11 @@ router.post('/', function (req, res) {
                                 '                      false,' +
                                 '                      \'New\',' +
                                 '                      \'' + item.discount + '\')';
-                            db.query(sqlItem);
+                            db.query(sqlItem); 
                         }
                     });
                 });
-                res.json({ status: 'insert success!' });
+                res.json({ err_code: 0, err_msg: 'insert success!' });
             }).catch(function (err) {
                 res.json({ err_code: 1, err_msg: 'insert failed:' + err.message });
             });
