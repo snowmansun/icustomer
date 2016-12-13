@@ -76,9 +76,10 @@ router.post('/', function (req, res) {
                     sqlProduct = 'select sfid from sfdc5sqas.product2 where productcode=\'' + item.product_code + '\' limit 1'
                     db.query(sqlProduct).then(function (resPId) {
                         if (resPId.rows.length > 0) {
+                            guid = uuid.v4();
                             var pId = resPId.rows[0].sfid;
                             sqlItem = 'insert into sfdc5sqas.orderitem(ebMobile__OrderNumber__c,' +
-                                '					    ebmobile__guid__c,' +
+                                '                       ebmobile__guid__c,' +
                                 '					    ebmobile__product2__c,' +
                                 '                       ebmobile__orderdate__c,' +
                                 '                       ebmobile__uomcode__c,' +
@@ -86,6 +87,8 @@ router.post('/', function (req, res) {
                                 '                       quantity,' +
                                 '                       unitprice,' +
                                 '                       ebmobile__isactive__c,' +
+                                '                       isdeleted,' +
+                                '                       ebmobile__orderitemstatus__c,' +
                                 '                       ebMobile__LineDiscAmount__c)' +
                                 '               values(\'' + req.body.order_no + '\',' +
                                 '                      \'' + guid + '\',' +
@@ -96,6 +99,8 @@ router.post('/', function (req, res) {
                                 '                      \'' + item.qty + '\',' +
                                 '                      \'' + item.unit_price + '\',' +
                                 '                      true,' +
+                                '                      false,' +
+                                '                      \'New\',' +
                                 '                      \'' + item.discount + '\')';
                             db.query(sqlItem);
                         }
