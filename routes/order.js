@@ -158,6 +158,7 @@ router.get('/download', function (req, res) {
         '   inner join sfdc5sqas.product2 pt on pt.sfid = oi.ebmobile__product2__c ' +
         ' where a.accountnumber = \'' + req.query.accountnumber + '\' and o.ebmobile__ordernumber__c like \'20161213000%\' ' +
         ' and o.ebmobile__orderdate__c> (current_date::timestamp + \'-30 day\') order by o.ebmobile__ordernumber__c';
+
     db.query(sql).then(function (resOrder) {
         if (resOrder.rows.length > 0) {
             var obj = resOrder.rows;
