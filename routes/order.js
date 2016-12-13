@@ -58,7 +58,6 @@ router.post('/', function (req, res) {
                             itemSequence = itemSequence.substring(itemSequence.length - 5, itemSequence.length);
 
                             sqlItem = 'insert into sfdc5sqas.orderitem(ebMobile__OrderNumber__c,' +
-                                '                       orderid,' +
                                 '					    ebmobile__product2__c,' +
                                 '                       ebmobile__orderdate__c,' +
                                 '                       ebmobile__uomcode__c,' +
@@ -71,7 +70,6 @@ router.post('/', function (req, res) {
                                 '                       ebMobile__LineDiscAmount__c,' +
                                 '                       ebMobile__ItemSequence__c)' +
                                 '               values(\'' + req.body.order_no + '\',' +
-                                '                      \'' + guid + '\',' +
                                 '                      \'' + pId + '\',' +
                                 '                      \'' + req.body.order_date + '\',' +
                                 '                      \'' + item.uom_code + '\',' +
@@ -149,7 +147,48 @@ router.get('/download', function (req, res) {
         ' inner join account a on o.accountid = a.sfid ' +
         ' where a.accountnumber = \'' + req.query.accountnumber + '\' and ebmobile__orderdate__c> (current_date::timestamp + \'-30 day\')';
     db.query(sql).then(function (resOrder) {
+        if (resOrder.rows.length > 0) {
+            var res_jsons = [];
+            var count = 0;
+            resOrder.forEach(function (row) {
+                var query = 'SELECT ebmobile__ordernumber__c order_no, ' +
+                    '     pt.productcode product_code, ' +
+                    '     ebmobile__uomcode__c uom_code, ' +
+                    '     ebmobile__orderquantity__c qty, ' +
+                    '     unitprice unit_price, ' +
+                    '     oi.ebmobile__LineDiscAmount__c discount ' +
+                    ' from orderitem oi ' +
+                    ' inner join product2 pt on pt.sfid = oi.ebmobile__product2__c ' +
+                    ' where ebmobile__ordernumber__c= \'' + row.order_no + '\'';
+                db.query(query).then(function (resItem) {
+                    var res_json = {
+                        "order_no": row.order_no,
+                        "outlet_id": row.outlet_id,
+                        "order_type": row.order_type,
+                        "user_code": row.user_code,
+                        "order_date": row.order_date,
+                        "qty_cs": row.qty_cs,
+                        "qty_ea": row.qty_ea,
+                        "total_price": row.total_price,
+                        "tax": row.tax,
+                        "net_price": row.net_price,
+                        "discount": row.discount,
+                        "delivery_date": row.delivery_date,
+                        "delivery_note": row.delivery_note,
+                        "status": row.status,
+                        "items": resItem.rows
+                    };
+                    res_jsons[count] = res_json;
+                    count++;
+                }).catch(function (err) {
+                    console.error(err);
+                });
+            });
 
+            res.json(res_jsons);
+        }
+    }).catch(function (err) {
+        console.error(err);
     });
 });
 
