@@ -14,8 +14,8 @@ router.get('/list', function (req, res) {
         '   ebmobile__pack__c AS package,' +
         '   ebmobile__brand__c AS brand,' +
         '   uom.ebmobile__denominator__c as denominator,' +
-        //'   am.sfid as pic,' +
-        '   \'00P2800000208xQEAQ\' as pic,' +
+        '   am.sfid as pic,' +
+        //'   \'00P2800000208xQEAQ\' as pic,' +
         '   0 as price,' +
         '   case when mh.ebmobile__product__c is not null then 1 else 0 end as isMusttohave, ' +
         '   case when oi.ebmobile__product2__c is not null then 1 else 0 end as isHistorySku ' +
