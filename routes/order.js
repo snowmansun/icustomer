@@ -12,6 +12,7 @@ router.post('/', function (req, res) {
             var time = sd.format(new Date(), 'YYYY-MM-DD');
             var guid = uuid.v4();
             var sqlHeader = 'insert into sfdc5sqas."order"(ebMobile__OrderNumber__c,' +
+                '                              ebmobile__erpordernumber__c,' +
                 '                              ebmobile__guid__c,' +
                 '                              accountid,' +
                 '                              TYPE,' +
@@ -28,6 +29,7 @@ router.post('/', function (req, res) {
                 '                              ebmobile__isactive__c, ' +
                 '                              effectivedate)' +
                 '                  VALUES(\'' + req.body.order_no + '\',' +
+                '                        \'' + req.body.order_no + '\',' +
                 '                        \'' + guid + '\',' +
                 '                        \'' + req.body.outlet_id + '\',' +
                 '                        \'' + req.body.order_type + '\',' +
@@ -58,6 +60,7 @@ router.post('/', function (req, res) {
                             itemSequence = itemSequence.substring(itemSequence.length - 5, itemSequence.length);
 
                             sqlItem = 'insert into sfdc5sqas.orderitem(ebMobile__OrderNumber__c,' +
+                                '					    order__ebmobile__erpordernumber__c,' +
                                 '					    ebmobile__product2__c,' +
                                 '                       ebmobile__orderdate__c,' +
                                 '                       ebmobile__uomcode__c,' +
@@ -70,6 +73,7 @@ router.post('/', function (req, res) {
                                 '                       ebMobile__LineDiscAmount__c,' +
                                 '                       ebMobile__ItemSequence__c)' +
                                 '               values(\'' + req.body.order_no + '\',' +
+                                '                      \'' + req.body.order_no + '\',' +
                                 '                      \'' + pId + '\',' +
                                 '                      \'' + req.body.order_date + '\',' +
                                 '                      \'' + item.uom_code + '\',' +
