@@ -7,7 +7,8 @@ router.get('/list', function (req, res) {
     if (!req.query.accountnumber)
         res.json({ err_code: 1, err_msg: 'miss param accountnumber' });
     var sql =
-        'SELECT' +
+        'SELECT ROW_NUMBER() OVER(order by a.ismusttohave desc,a.ishistorysku desc,a.code) seq,* ' +
+        'FROM (SELECT' +
         '   productcode AS code,' +
         '   p.description AS NAME,' +
         '   ebmobile__flavor__c AS flavor,' +
@@ -51,7 +52,8 @@ router.get('/list', function (req, res) {
         '           group by productcode, am.parentid ' +
         '       ) a on am.parentid = a.parentid and am.lastmodifieddate = a.lastmodifieddate ' +
 		'   ) am on am.parentid = p.sfid  '+
-        'Where p.isactive = TRUE';
+        'Where p.isactive = TRUE) a ' +
+        'order by a.ismusttohave desc,a.ishistorysku desc,a.code ';
 
     db.query(sql)
         .then(function (result) {
