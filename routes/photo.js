@@ -51,21 +51,14 @@ router.get('/list', function (req, res) {
     db.query(sql)
         .then(function (result) {
             var res_jsons = [];
-            var obj = {};
             var items = result.rows;
-            //for (var i = 0; i < rows.length; i++) {
-            //    res_json.pic = rows[i].pic;
-            //    res_json.content_type = rows[i].content_type;
-            //    res_json.body = rows[i].body.toString();
-            //    res_jsons[i] = res_json;
-            //}
             items.forEach(function (item) {
+                var obj = {};
                 obj.pic = item.pic;
                 obj.content_type = item.content_type;
                 obj.body = item.body.toString();
-                res_jsons.push(item);
+                res_jsons.push(obj);
             });
-        
 
             res.json(res_jsons);
 
