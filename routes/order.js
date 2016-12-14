@@ -73,6 +73,7 @@ router.post('/', function (req, res) {
                                 '                       isdeleted,' +
                                 '                       ebmobile__orderitemstatus__c,' +
                                 '                       ebMobile__LineDiscAmount__c,' +
+                                '                       ebmobile__guid__c, '+
                                 '                       ebMobile__ItemSequence__c)' +
                                 '               values(\'' + req.body.order_no + '\',' +
                                 '                      \'' + req.body.order_no + '\',' +
@@ -86,6 +87,7 @@ router.post('/', function (req, res) {
                                 '                      false,' +
                                 '                      \'New\',' +
                                 '                      \'' + item.discount + '\',' +
+                                '                       \'' + uuid.v4() + '\', ' +
                                 '                      \'' + itemSequence + '\')';
                             db.query(sqlItem);
                         }

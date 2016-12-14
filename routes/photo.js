@@ -51,17 +51,21 @@ router.get('/list', function (req, res) {
     db.query(sql)
         .then(function (result) {
             var res_jsons = [];
-            var res_json = {};
-            var rows = result.rows;
-            for (var i = 0; i < rows.length; i++) {
-                res_json.pic = rows[i].pic;
-                res_json.content_type = rows[i].content_type;
-                res_json.body = rows[i].body.toString();
-                res_jsons[i] = res_json;
-            }
-            //返回html标签
-            //res.writeHead(200, { 'Content-Type': 'text/html' });
-            //res.end('<img src=\'data:' + res_jsons[0].content_type + ';base64,' + res_jsons[0].body.toString() + '\' />');
+            var obj = {};
+            var items = result.rows;
+            //for (var i = 0; i < rows.length; i++) {
+            //    res_json.pic = rows[i].pic;
+            //    res_json.content_type = rows[i].content_type;
+            //    res_json.body = rows[i].body.toString();
+            //    res_jsons[i] = res_json;
+            //}
+            items.forEach(function (item) {
+                obj.pic = item.pic;
+                obj.content_type = item.content_type;
+                obj.body = item.body.toString();
+                res_jsons.push(item);
+            });
+
             res.json(res_jsons);
 
         }).catch(function (err) {
