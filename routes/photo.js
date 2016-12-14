@@ -65,6 +65,7 @@ router.get('/list', function (req, res) {
                 obj.body = item.body.toString();
                 res_jsons.push(item);
             });
+        
 
             res.json(res_jsons);
 
