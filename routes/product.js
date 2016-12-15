@@ -24,7 +24,7 @@ router.get('/list', function (req, res) {
         '   sfdc5sqas.product2 p '+
         '   inner join sfdc5sqas.ebmobile__productuom__c uom on p.sfid = uom.ebmobile__productid__c and uom.ebmobile__isactive__c=true and ebmobile__uomcode__c= \'EA\' ' +
         '   left join ( ' +
-        '       select mh.ebmobile__product__c '+
+        '       select distinct mh.ebmobile__product__c '+
         '       from sfdc5sqas.ebmobile__accountgroupitem__c agi ' +
         '       inner join sfdc5sqas.ebmobile__accountgroup__c ag on agi.ebmobile__accountgroup__c = ag.sfid and ag.ebmobile__type__c = \'RED Survey\' ' +
         '       inner join sfdc5sqas.ebmobile__musttohave__c mh on mh.ebmobile__accountgroup__c = ag.sfid and mh.ebmobile__isActive__c = true ' +
@@ -74,17 +74,17 @@ router.get('/attr', function (req, res) {
         'SELECT ebMobile__PicklistValue__c "name", am.sfid pic ' +
         'FROM sfdc5sqas.ebMobile__PickListMaster__c pm ' +
         'left join sfdc5sqas.attachment  am on am.parentid = pm.sfid ' +
-        'where pm.ebmobile__fieldname__c = \'ebMobile__Brand__c\' and pm.ebmobile__objectname__c = \'Product2\'';
+        'where pm.ebmobile__fieldname__c = \'ebMobile__Brand__c\' and pm.ebmobile__objectname__c = \'Product2\' and pm.ebmobile__isactive__c=true';
     var sql_flavor =
         'SELECT ebMobile__PicklistValue__c "name",am.sfid pic ' +
         'FROM sfdc5sqas.ebMobile__PickListMaster__c pm ' +
         'left join sfdc5sqas.attachment  am on am.parentid = pm.sfid ' +
-        'where pm.ebmobile__fieldname__c = \'ebMobile__Flavor__c\' and pm.ebmobile__objectname__c = \'Product2\'';
+        'where pm.ebmobile__fieldname__c = \'ebMobile__Flavor__c\' and pm.ebmobile__objectname__c = \'Product2\' and pm.ebmobile__isactive__c=true';
     var sql_pack =
         'SELECT ebMobile__PicklistValue__c "name", am.sfid pic ' +
         'FROM sfdc5sqas.ebMobile__PickListMaster__c pm ' +
         'left join sfdc5sqas.attachment  am on am.parentid = pm.sfid ' +
-        'where pm.ebmobile__fieldname__c = \'ebMobile__Pack__c\' and pm.ebmobile__objectname__c = \'Product2\'';
+        'where pm.ebmobile__fieldname__c = \'ebMobile__Pack__c\' and pm.ebmobile__objectname__c = \'Product2\' and pm.ebmobile__isactive__c=true';
 
     var res_json = {
         brand: '',
