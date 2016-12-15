@@ -150,22 +150,48 @@ router.get('/download', function (req, res) {
         '     o.ebmobile__discamount__c discount, ' +
         '     o.ebmobile__deliverydate__c delivery_date, ' +
         '     o.ebmobile__deliverynotes__c delivery_note, ' +
-        '     o.Status status, ' + 
+        '     o.Status status, ' +
+
+        '     \'John Hanson\' salesRep, ' +
+        '     \'13510738521\' salesRepPhone, ' +
+        '     \'Bruce White\' deliveryman, ' +
+        '     \'13910363500\' deliverymanPhone, ' +
+        '     \'400-3838438\' callCenter, ' +
+
+        '     \'INV000004562\' invoiceNumber, ' +
+        '     \'Cash\' paymentMethod, ' +
+        '     \'2016-08-31\' lastPaymentDate, ' +
+        '     \'100.00\' amountPaid, ' +
+        '     \'40.02\' amountDue, ' +
+
         '     pt.productcode product_code, ' + 
         '     ebmobile__uomcode__c uom_code, ' + 
         '     ebmobile__orderquantity__c qty, ' + 
         '     unitprice unit_price, ' + 
-        '     oi.ebmobile__LineDiscAmount__c discount ' + 
+        '     oi.ebmobile__LineDiscAmount__c itemdiscount, ' + 
+        '     am.sfid as pic '+
         ' from sfdc5sqas."order" o ' +
         '   inner join sfdc5sqas.account a on o.accountid = a.sfid ' +
         '   inner join sfdc5sqas.orderitem oi on oi.ebmobile__ordernumber__c = o.ebmobile__ordernumber__c ' +
         '   inner join sfdc5sqas.product2 pt on pt.sfid = oi.ebmobile__product2__c ' +
+        ' left join ( '+
+        '    select am.parentid, am.sfid ' +
+        '    from sfdc5sqas.attachment am  ' +
+        '    INNER JOIN( ' +
+        '        select productcode, am.parentid, max(am.lastmodifieddate) lastmodifieddate  ' +
+        '		         from sfdc5sqas.product2 p  ' +
+        '				        inner join sfdc5sqas.attachment  am on am.parentid = p.sfid and am.isdeleted = false  ' +
+        '		         where p.isactive = TRUE  ' +
+        '		         group by productcode, am.parentid ' +
+        '    ) a on am.parentid = a.parentid and am.lastmodifieddate = a.lastmodifieddate  ' +
+        ' ) am on am.parentid = pt.sfid '+
         ' where a.accountnumber = \'' + req.query.accountnumber + '\' ' +
         ' and o.ebmobile__orderdate__c> (current_date::timestamp + \'-30 day\') order by o.ebmobile__ordernumber__c';
 
     db.query(sql).then(function (resOrder) {
         if (resOrder.rows.length > 0) {
             var obj = resOrder.rows;
+            
             var res_jsons = [];
             var lastOrderNumber = '';
             var res_json = {};
@@ -176,12 +202,12 @@ router.get('/download', function (req, res) {
                         "uom_code": row.uom_code,
                         "qty": row.qty,
                         "unit_price": row.unit_price,
-                        "discount": row.discount
+                        "discount": row.itemdiscount
                     };
                     res_json.items.push(itemJson);
                 }
                 else {
-                    if (lastOrderNumber !== '') {
+                    if (lastOrderNumber != '') {
                         res_jsons.push(res_json);
                         res_json = {};
                     }
@@ -201,13 +227,25 @@ router.get('/download', function (req, res) {
                         "delivery_date": row.delivery_date,
                         "delivery_note": row.delivery_note,
                         "status": row.status,
+
+                        "salesRep": row.salesrep,
+                        "salesRepPhone": row.salesrepphone,
+                        "deliveryman": row.deliveryman,
+                        "deliverymanPhone": row.deliverymanphone,
+                        "callCenter": row.callcenter,
+                        "invoiceNumber": row.invoicenumber,
+                        "paymentMethod": row.paymentmethod,
+                        "lastPaymentDate": row.lastpaymentdate,
+                        "amountPaid": row.amountPaid,
+                        "amountDue": row.amountDue,
+                        "pic": row.pic,
                         "items": [
                             {
                                 "product_code": row.product_code,
                                 "uom_code": row.uom_code,
                                 "qty": row.qty,
                                 "unit_price": row.unit_price,
-                                "discount": row.discount
+                                "discount": row.itemdiscount
                             }
                         ]
                     };
@@ -217,6 +255,42 @@ router.get('/download', function (req, res) {
             res_jsons.push(res_json);
             res.json(res_jsons);
         }
+    }).catch(function (err) {
+        console.error(err);
+    });
+
+});
+
+router.get('/orderdetails', function (req, res) {
+    if (!req.query.order_no)
+        res.json({ err_code: 1, err_msg: 'miss param order_no' });
+
+    var sql = 'select \'' + req.query.order_no + '\' order_no, '+
+        '     \'John Hanson\' salesRep, ' +
+        '     \'13510738521\' salesRepPhone, ' +
+        '     \'Bruce White\' deliveryman, ' +
+        '     \'13910363500\' deliverymanPhone, ' +
+        '     \'400-3838438\' callCenter, ' +
+
+        '     \'INV000004562\' invoiceNumber, ' +
+        '     \'Cash\' paymentMethod, ' +
+        '     \'2016-08-31\' lastPaymentDate, ' +
+        '     \'100.00\' amountPaid, ' +
+        '     \'40.02\' amountDue';
+    db.query(sql).then(function (result) {
+        //var res_json = {
+        //    "order_no": row.order_no,
+        //    "deliveryman": row.deliveryman,
+        //    "deliverymanPhone": row.deliverymanPhone,
+        //    "callCenter": row.callCenter,
+        //    "invoiceNumber": row.invoiceNumber,
+        //    "paymentMethod": row.paymentMethod,
+        //    "lastPaymentDate": row.lastPaymentDate,
+        //    "amountPaid": row.amountPaid,
+        //    "amountDue": row.amountDue
+        //};
+
+        res.json(result.rows[0]);
     }).catch(function (err) {
         console.error(err);
     });
