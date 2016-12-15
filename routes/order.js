@@ -238,14 +238,14 @@ router.get('/download', function (req, res) {
                         "lastPaymentDate": row.lastpaymentdate,
                         "amountPaid": row.amountpaid,
                         "amountDue": row.amountdue,
-                        "pic": row.pic,
                         "items": [
                             {
                                 "product_code": row.product_code,
                                 "uom_code": row.uom_code,
                                 "qty": row.qty,
                                 "unit_price": row.unit_price,
-                                "discount": row.itemdiscount
+                                "discount": row.itemdiscount,
+                                "pic": row.pic
                             }
                         ]
                     };
