@@ -236,8 +236,8 @@ router.get('/download', function (req, res) {
                         "invoiceNumber": row.invoicenumber,
                         "paymentMethod": row.paymentmethod,
                         "lastPaymentDate": row.lastpaymentdate,
-                        "amountPaid": row.amountPaid,
-                        "amountDue": row.amountDue,
+                        "amountPaid": row.amountpaid,
+                        "amountDue": row.amountdue,
                         "pic": row.pic,
                         "items": [
                             {
