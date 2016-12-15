@@ -160,7 +160,7 @@ router.get('/download', function (req, res) {
         '   inner join sfdc5sqas.account a on o.accountid = a.sfid ' +
         '   inner join sfdc5sqas.orderitem oi on oi.ebmobile__ordernumber__c = o.ebmobile__ordernumber__c ' +
         '   inner join sfdc5sqas.product2 pt on pt.sfid = oi.ebmobile__product2__c ' +
-        ' where a.accountnumber = \'' + req.query.accountnumber + '\' and o.ebmobile__ordernumber__c like \'20161213000%\' ' +
+        ' where a.accountnumber = \'' + req.query.accountnumber + '\' ' +
         ' and o.ebmobile__orderdate__c> (current_date::timestamp + \'-30 day\') order by o.ebmobile__ordernumber__c';
 
     db.query(sql).then(function (resOrder) {
