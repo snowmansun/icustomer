@@ -32,7 +32,7 @@ router.get('/list', function (req, res) {
         '       where ac.accountnumber = \'' + req.query.accountnumber + '\' ' +
         '   ) mh on mh.ebmobile__Product__c = p.sfid  ' +
         '   left join ( '+
-        '       select oi.ebmobile__product2__c '+
+        '       select distinct oi.ebmobile__product2__c '+
         '       from sfdc5sqas.orderitem oi ' +
         '       inner join ( ' +
         '           select o.ebmobile__ordernumber__c from sfdc5sqas."order" o ' +
