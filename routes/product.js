@@ -41,17 +41,18 @@ router.get('/list', function (req, res) {
         '           order by o.ebmobile__orderdate__c desc limit 5 ' +
         '       ) o on oi.ebmobile__ordernumber__c = o.ebmobile__ordernumber__c ' +
         '   ) oi on oi.ebmobile__product2__c=p.sfid '+
-        '   left join ( ' +
-        '       select am.parentid, am.sfid ' +
-        '       from sfdc5sqas.attachment am ' +
-        '       INNER JOIN( ' +
-        '           select productcode, am.parentid, max(am.lastmodifieddate) lastmodifieddate ' +
-        '           from sfdc5sqas.product2 p ' +
-        '		            inner join sfdc5sqas.attachment  am on am.parentid = p.sfid and am.isdeleted = false ' +
-        '           where p.isactive = TRUE ' +
-        '           group by productcode, am.parentid ' +
-        '       ) a on am.parentid = a.parentid and am.lastmodifieddate = a.lastmodifieddate ' +
-		'   ) am on am.parentid = p.sfid  '+
+        '   left join sfdc5sqas.attachment am on am.parentid = p.sfid '+
+  //      '   (' +
+  //      '       select am.parentid, am.sfid ' +
+  //      '       from sfdc5sqas.attachment am ' +
+  //      '       INNER JOIN( ' +
+  //      '           select productcode, am.parentid, max(am.lastmodifieddate) lastmodifieddate ' +
+  //      '           from sfdc5sqas.product2 p ' +
+  //      '		            inner join sfdc5sqas.attachment  am on am.parentid = p.sfid and am.isdeleted = false ' +
+  //      '           where p.isactive = TRUE ' +
+  //      '           group by productcode, am.parentid ' +
+  //      '       ) a on am.parentid = a.parentid and am.lastmodifieddate = a.lastmodifieddate ' +
+		//'   ) am on am.parentid = p.sfid  '+
         'Where p.isactive = TRUE) a ' +
         'order by a.ismusttohave desc,a.ishistorysku desc,a.code ';
 

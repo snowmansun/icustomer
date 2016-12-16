@@ -174,7 +174,7 @@ router.get('/download', function (req, res) {
         '   inner join sfdc5sqas.account a on o.accountid = a.sfid ' +
         '   inner join sfdc5sqas.orderitem oi on oi.ebmobile__ordernumber__c = o.ebmobile__ordernumber__c ' +
         '   inner join sfdc5sqas.product2 pt on pt.sfid = oi.ebmobile__product2__c ' +
-        ' left join sfdc5sqas.attachment am on am.parentid = pt.sfid '+
+        '   left join sfdc5sqas.attachment am on am.parentid = pt.sfid '+
         //' ('+
         //'    select am.parentid, am.sfid ' +
         //'    from sfdc5sqas.attachment am  ' +
