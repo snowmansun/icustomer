@@ -164,7 +164,7 @@ router.get('/download', function (req, res) {
         '     \'100.00\' amountpaid, ' +
         '     \'40.02\' amountdue, ' +
 
-        '     pt.productcode product_code, ' + 
+        '     pt.name product_code, ' + 
         '     ebmobile__uomcode__c uom_code, ' + 
         '     ebmobile__orderquantity__c qty, ' + 
         '     unitprice unit_price, ' + 
@@ -174,17 +174,18 @@ router.get('/download', function (req, res) {
         '   inner join sfdc5sqas.account a on o.accountid = a.sfid ' +
         '   inner join sfdc5sqas.orderitem oi on oi.ebmobile__ordernumber__c = o.ebmobile__ordernumber__c ' +
         '   inner join sfdc5sqas.product2 pt on pt.sfid = oi.ebmobile__product2__c ' +
-        ' left join ( '+
-        '    select am.parentid, am.sfid ' +
-        '    from sfdc5sqas.attachment am  ' +
-        '    INNER JOIN( ' +
-        '       select productcode, am.parentid, max(am.lastmodifieddate) lastmodifieddate  ' +
-        '	    from sfdc5sqas.product2 p  ' +
-        '	       inner join sfdc5sqas.attachment  am on am.parentid = p.sfid and am.isdeleted = false  ' +
-        '	    where p.isactive = TRUE  ' +
-        '	    group by productcode, am.parentid ' +
-        '    ) a on am.parentid = a.parentid and am.lastmodifieddate = a.lastmodifieddate  ' +
-        ' ) am on am.parentid = pt.sfid '+
+        ' left join sfdc5sqas.attachment am on am.parentid = pt.sfid '+
+        //' ('+
+        //'    select am.parentid, am.sfid ' +
+        //'    from sfdc5sqas.attachment am  ' +
+        //'    INNER JOIN( ' +
+        //'       select productcode, am.parentid, max(am.lastmodifieddate) lastmodifieddate  ' +
+        //'	    from sfdc5sqas.product2 p  ' +
+        //'	       inner join sfdc5sqas.attachment  am on am.parentid = p.sfid and am.isdeleted = false  ' +
+        //'	    where p.isactive = TRUE  ' +
+        //'	    group by productcode, am.parentid ' +
+        //'    ) a on am.parentid = a.parentid and am.lastmodifieddate = a.lastmodifieddate  ' +
+        //' ) am on am.parentid = pt.sfid '+
         ' where a.accountnumber = \'' + req.query.accountnumber + '\' ' +
         ' and o.ebmobile__orderdate__c> (current_date::timestamp + \'-30 day\') order by o.ebmobile__orderdate__c desc';
 
