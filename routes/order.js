@@ -71,7 +71,6 @@ router.post('/', function (req, res) {
                                 '                       quantity,' +
                                 '                       unitprice,' +
                                 '                       ebmobile__isactive__c,' +
-                                '                       isdeleted,' +
                                 '                       ebmobile__orderitemstatus__c,' +
                                 '                       ebMobile__LineDiscAmount__c,' +
                                 '                       ebmobile__guid__c, '+
@@ -85,8 +84,7 @@ router.post('/', function (req, res) {
                                 '                      \'' + item.qty + '\',' +
                                 '                      \'' + item.unit_price + '\',' +
                                 '                      true,' +
-                                '                      false,' +
-                                '                      \'New\',' +
+                                '                      \'' + req.body.status + '\',' +
                                 '                      \'' + item.discount + '\',' +
                                 '                       \'' + uuid.v4() + '\', ' +
                                 '                      \'' + itemSequence + '\')';
@@ -174,7 +172,7 @@ router.get('/download', function (req, res) {
         '   inner join sfdc5sqas.account a on o.accountid = a.sfid ' +
         '   inner join sfdc5sqas.orderitem oi on oi.ebmobile__ordernumber__c = o.ebmobile__ordernumber__c ' +
         '   inner join sfdc5sqas.product2 pt on pt.sfid = oi.ebmobile__product2__c ' +
-        '   left join sfdc5sqas.attachment am on am.parentid = pt.sfid '+
+        '   left join sfdc5sqas.attachment am on am.parentid = pt.sfid  AND am.isDeleted=false '+
         //' ('+
         //'    select am.parentid, am.sfid ' +
         //'    from sfdc5sqas.attachment am  ' +

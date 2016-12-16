@@ -41,7 +41,7 @@ router.get('/list', function (req, res) {
         '           order by o.ebmobile__orderdate__c desc limit 5 ' +
         '       ) o on oi.ebmobile__ordernumber__c = o.ebmobile__ordernumber__c ' +
         '   ) oi on oi.ebmobile__product2__c=p.sfid '+
-        '   left join sfdc5sqas.attachment am on am.parentid = p.sfid '+
+        '   left join sfdc5sqas.attachment am on am.parentid = p.sfid  AND am.isDeleted=false '+
   //      '   (' +
   //      '       select am.parentid, am.sfid ' +
   //      '       from sfdc5sqas.attachment am ' +
