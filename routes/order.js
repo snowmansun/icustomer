@@ -138,7 +138,7 @@ router.get('/download', function (req, res) {
     if (!req.query.accountnumber)
         res.json({ err_code: 1, err_msg: 'miss param accountnumber' });
 
-    var sql = 'select o.ebMobile__OrderNumber__c order_no, ' +
+    var sql = 'select o.OrderNumber order_no, ' +
         '     o.accountid outlet_id, ' +
         '     o."type" order_type, ' +
         '     o.ebmobile__orderdate__c order_date, ' +
@@ -185,7 +185,7 @@ router.get('/download', function (req, res) {
         '    ) a on am.parentid = a.parentid and am.lastmodifieddate = a.lastmodifieddate  ' +
         ' ) am on am.parentid = pt.sfid '+
         ' where a.accountnumber = \'' + req.query.accountnumber + '\' ' +
-        ' and o.ebmobile__orderdate__c> (current_date::timestamp + \'-30 day\') order by o.ebmobile__ordernumber__c';
+        ' and o.ebmobile__orderdate__c> (current_date::timestamp + \'-30 day\') order by o.ebmobile__orderdate__c desc';
 
     db.query(sql).then(function (resOrder) {
         if (resOrder.rows.length > 0) {
