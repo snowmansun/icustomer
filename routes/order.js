@@ -10,6 +10,7 @@ router.post('/', function (req, res) {
     db.query(sql).then(function (OrderNumber) {
         if (OrderNumber.rows.length == 0) {
             var time = sd.format(new Date(), 'YYYY-MM-DD');
+            
             var guid = uuid.v4();
             var sqlHeader = 'insert into sfdc5sqas."order"(ebMobile__OrderNumber__c,' +
                 '                              ebmobile__erpordernumber__c,' +
@@ -34,7 +35,7 @@ router.post('/', function (req, res) {
                 '                        \'' + guid + '\',' +
                 '                        \'' + req.body.outlet_id + '\',' +
                 '                        \'' + req.body.order_type + '\',' +
-                '                        \'' + req.body.order_date + '\',' +
+                '                        \'' + new Date(req.body.order_date).toISOString() + '\',' +
                 '                        ' + req.body.qty_cs + ',' +
                 '                        ' + req.body.qty_ea + ',' +
                 '                        ' + req.body.total_price + ',' +
@@ -42,11 +43,11 @@ router.post('/', function (req, res) {
                 '                        ' + req.body.tax + ',' +
                 '                        ' + req.body.net_price + ',' +
                 '                        ' + req.body.discount + ',' +
-                '                        \'' + req.body.delivery_date + '\',' +
+                '                        \'' + new Date(req.body.delivery_date).toISOString() + '\',' +
                 '                        \'' + req.body.delivery_note + '\',' +
                 '                        \'' + req.body.status + '\',' +
                 '                        TRUE,' +
-                '                        \'' + time + '\')';
+                '                        \'' + new Date(time).toISOString() + '\')';
             db.query(sqlHeader).then(function (result) {
                 var sqlItem = '';
                 var sqlProduct = '';
@@ -78,7 +79,7 @@ router.post('/', function (req, res) {
                                 '               values(\'' + req.body.order_no + '\',' +
                                 '                      \'' + req.body.order_no + '\',' +
                                 '                      \'' + pId + '\',' +
-                                '                      \'' + req.body.order_date + '\',' +
+                                '                      \'' + new Date(req.body.order_date).toISOString() + '\',' +
                                 '                      \'' + item.uom_code + '\',' +
                                 '                      \'' + item.qty + '\',' +
                                 '                      \'' + item.qty + '\',' +
@@ -201,7 +202,8 @@ router.get('/download', function (req, res) {
                         "uom_code": row.uom_code,
                         "qty": row.qty,
                         "unit_price": row.unit_price,
-                        "discount": row.itemdiscount
+                        "discount": row.itemdiscount,
+                        "pic": row.pic
                     };
                     res_json.items.push(itemJson);
                 }
