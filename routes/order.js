@@ -137,7 +137,7 @@ router.get('/download', function (req, res) {
     if (!req.query.accountnumber)
         res.json({ err_code: 1, err_msg: 'miss param accountnumber' });
 
-    var sql = 'select o.OrderNumber order_no, ' +
+    var sql = 'select COALESCE(o.ordernumber,o.ebmobile__ordernumber__c) order_no, ' +
         '     o.accountid outlet_id, ' +
         '     o."type" order_type, ' +
         '     o.ebmobile__orderdate__c order_date, ' +
