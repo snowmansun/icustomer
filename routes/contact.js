@@ -6,7 +6,7 @@ router.get('/info', function (req, res) {
     if (!req.query.accountnumber)
         res.json({ err_code: 1, err_msg: 'miss param accountnumber' });
 
-    var query = 'select a.accountnumber customercode,c.name customername ' +
+    var query = 'select a.accountnumber customercode,c.name customername,c.accountid ' +
         '     , firstname,lastname, email, mobilephone ,a.ebmobile__salesroute__c salesrep' +
         ' from sfdc5sqas.contact  c ' +
         ' inner join sfdc5sqas.account a on c.accountid = a.sfid ' +
@@ -15,6 +15,15 @@ router.get('/info', function (req, res) {
         res.json(result.rows);
     }).catch(function (err) {
         console.error(err);
+    });
+});
+
+router.post('/update', function (req, res) {
+    var query = 'update sfdc5sqas.contact set firstname=\'' + req.body.firstname + '\',lastname=\'' + req.body.lastname + '\',email=\'' + req.body.email + '\',mobilephone=\'' + req.body.mobile + '\' where accountid=\'' + req.body.accountid + '\'';
+    db.query(query).then(function (result) {
+        res.json({ err_code: 0, err_msg: 'insert success!' });
+    }).catch(function (err) {
+        res.json({ err_code: 1, err_msg: 'insert failed:' + err.message });
     });
 });
 
