@@ -13,41 +13,43 @@ router.post('/', function (req, res) {
             
             var guid = uuid.v4();
             var sqlHeader = 'insert into sfdc5sqas."order"(ebMobile__OrderNumber__c,' +
-                '                              ebmobile__erpordernumber__c,' +
-                '                              ebmobile__guid__c,' +
-                '                              accountid,' +
-                '                              TYPE,' +
-                '                              ebmobile__orderdate__c,' +
-                '                              ebmobile__totalquantitycs__c,' +
-                '                              ebmobile__totalquantityea__c,' +
-                '                              ebmobile__totalamount__c,' +
-                '                              totalamount,' +
-                '                              ebmobile__taxamount__c,' +
-                '                              ebmobile__netamount__c,' +
-                '                              ebmobile__discamount__c,' +
-                '                              ebmobile__deliverydate__c,' +
-                '                              ebmobile__deliverynotes__c,' +
-                '                              Status,' +
-                '                              ebmobile__isactive__c, ' +
-                '                              effectivedate)' +
-                '                  VALUES(\'' + req.body.order_no + '\',' +
-                '                        \'' + req.body.order_no + '\',' +
-                '                        \'' + guid + '\',' +
-                '                        \'' + req.body.outlet_id + '\',' +
-                '                        \'' + req.body.order_type + '\',' +
-                '                        \'' + new Date(req.body.order_date).toISOString() + '\',' +
-                '                        ' + req.body.qty_cs + ',' +
-                '                        ' + req.body.qty_ea + ',' +
-                '                        ' + req.body.total_price + ',' +
-                '                        ' + req.body.total_price + ',' +
-                '                        ' + req.body.tax + ',' +
-                '                        ' + req.body.net_price + ',' +
-                '                        ' + req.body.discount + ',' +
-                '                        \'' + new Date(req.body.delivery_date).toISOString() + '\',' +
-                '                        \'' + req.body.delivery_note + '\',' +
-                '                        \'' + req.body.status + '\',' +
-                '                        TRUE,' +
-                '                        \'' + new Date(time).toISOString() + '\')';
+                '      ebmobile__erpordernumber__c,' +
+                '      ebmobile__guid__c,' +
+                '      accountid,' +
+                '      TYPE,' +
+                '      ebmobile__orderdate__c,' +
+                '      ebMobile__TotalQuantity__c,' +
+                '      ebmobile__totalquantitycs__c,' +
+                '      ebmobile__totalquantityea__c,' +
+                '      ebmobile__totalamount__c,' +
+                '      totalamount,' +
+                '      ebmobile__taxamount__c,' +
+                '      ebmobile__netamount__c,' +
+                '      ebmobile__discamount__c,' +
+                '      ebmobile__deliverydate__c,' +
+                '      ebmobile__deliverynotes__c,' +
+                '      Status,' +
+                '      ebmobile__isactive__c, ' +
+                '      effectivedate)' +
+                '  VALUES(\'' + req.body.order_no + '\',' +
+                '        \'' + req.body.order_no + '\',' +
+                '        \'' + guid + '\',' +
+                '        \'' + req.body.outlet_id + '\',' +
+                '        \'' + req.body.order_type + '\',' +
+                '        \'' + new Date(req.body.order_date).toISOString() + '\',' +
+                '        ' + req.body.qty + ',' +
+                '        ' + req.body.qty_cs + ',' +
+                '        ' + req.body.qty_ea + ',' +
+                '        ' + req.body.total_price + ',' +
+                '        ' + req.body.total_price + ',' +
+                '        ' + req.body.tax + ',' +
+                '        ' + req.body.net_price + ',' +
+                '        ' + req.body.discount + ',' +
+                '        \'' + new Date(req.body.delivery_date).toISOString() + '\',' +
+                '        \'' + req.body.delivery_note + '\',' +
+                '        \'' + req.body.status + '\',' +
+                '        TRUE,' +
+                '        \'' + new Date(time).toISOString() + '\')';
             db.query(sqlHeader).then(function (result) {
                 var sqlItem = '';
                 var sqlProduct = '';
@@ -63,31 +65,31 @@ router.post('/', function (req, res) {
                             itemSequence = itemSequence.substring(itemSequence.length - 5, itemSequence.length);
 
                             sqlItem = 'insert into sfdc5sqas.orderitem(ebMobile__OrderNumber__c,' +
-                                '					    order__ebmobile__erpordernumber__c,' +
-                                '					    ebmobile__product2__c,' +
-                                '                       ebmobile__orderdate__c,' +
-                                '                       ebmobile__uomcode__c,' +
-                                '                       ebmobile__orderquantity__c,' +
-                                '                       quantity,' +
-                                '                       unitprice,' +
-                                '                       ebmobile__isactive__c,' +
-                                '                       ebmobile__orderitemstatus__c,' +
-                                '                       ebMobile__LineDiscAmount__c,' +
-                                '                       ebmobile__guid__c, '+
-                                '                       ebMobile__ItemSequence__c)' +
-                                '               values(\'' + req.body.order_no + '\',' +
-                                '                      \'' + req.body.order_no + '\',' +
-                                '                      \'' + pId + '\',' +
-                                '                      \'' + new Date(req.body.order_date).toISOString() + '\',' +
-                                '                      \'' + item.uom_code + '\',' +
-                                '                      \'' + item.qty + '\',' +
-                                '                      \'' + item.qty + '\',' +
-                                '                      \'' + item.unit_price + '\',' +
-                                '                      true,' +
-                                '                      \'' + req.body.status + '\',' +
-                                '                      \'' + item.discount + '\',' +
-                                '                       \'' + uuid.v4() + '\', ' +
-                                '                      \'' + itemSequence + '\')';
+                                '		    order__ebmobile__erpordernumber__c,' +
+                                '		    ebmobile__product2__c,' +
+                                '           ebmobile__orderdate__c,' +
+                                '           ebmobile__uomcode__c,' +
+                                '           ebmobile__orderquantity__c,' +
+                                '           quantity,' +
+                                '           unitprice,' +
+                                '           ebmobile__isactive__c,' +
+                                '           ebmobile__orderitemstatus__c,' +
+                                '           ebMobile__LineDiscAmount__c,' +
+                                '           ebmobile__guid__c, '+
+                                '           ebMobile__ItemSequence__c)' +
+                                '   values(\'' + req.body.order_no + '\',' +
+                                '          \'' + req.body.order_no + '\',' +
+                                '          \'' + pId + '\',' +
+                                '          \'' + new Date(req.body.order_date).toISOString() + '\',' +
+                                '          \'' + item.uom_code + '\',' +
+                                '          \'' + item.qty + '\',' +
+                                '          \'' + item.qty + '\',' +
+                                '          \'' + item.unit_price + '\',' +
+                                '          true,' +
+                                '          \'' + req.body.status + '\',' +
+                                '          \'' + item.discount + '\',' +
+                                '           \'' + uuid.v4() + '\', ' +
+                                '          \'' + itemSequence + '\')';
                             db.query(sqlItem);
                         }
                     }).catch(function (err) {
@@ -111,6 +113,7 @@ router.post('/', function (req, res) {
     //    "order_type":"Sales Order",                 // Type
     //    "user_code": "13811981123",                 //
     //    "order_date": "2016-12-09 15:56",           // ebmobile__orderdate__c
+    //    "qty":"30.4                                 // ebMobile__TotalQuantity__c
     //    "qty_cs": "12",                             // ebmobile__totalquantitycs__c
     //    "qty_ea": "8",                              // ebmobile__totalquantityea__c
     //    "total_price": "86.4",                      // ebmobile__totalamount__c
@@ -141,6 +144,7 @@ router.get('/download', function (req, res) {
         '     o.accountid outlet_id, ' +
         '     o."type" order_type, ' +
         '     o.ebmobile__orderdate__c order_date, ' +
+        '     o.ebMobile__TotalQuantity__c qty, ' +
         '     o.ebmobile__totalquantitycs__c qty_cs, ' +
         '     o.ebmobile__totalquantityea__c qty_ea, ' +
         '     o.ebmobile__totalamount__c total_price, ' +
@@ -218,6 +222,7 @@ router.get('/download', function (req, res) {
                         "order_type": row.order_type,
                         "user_code": row.user_code,
                         "order_date": new Date(row.order_date).toLocaleString(),
+                        "qty": row.qty,
                         "qty_cs": row.qty_cs,
                         "qty_ea": row.qty_ea,
                         "total_price": row.total_price,
