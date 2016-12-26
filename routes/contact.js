@@ -7,8 +7,7 @@ router.get('/info', function (req, res) {
         res.json({ err_code: 1, err_msg: 'miss param accountnumber' });
 
     var query = 'select a.accountnumber customercode,c.name customername ' +
-        '     , cast(firstname as varchar) || \' \' || cast(lastname as varchar) username ' +
-        '     , email, mobilephone ' +
+        '     , firstname,lastname, email, mobilephone ' +
         ' from sfdc5sqas.contact  c ' +
         ' inner join sfdc5sqas.account a on c.accountid = a.sfid ' +
         ' where ebmobile__primary__c= true and a.accountnumber = \'' + req.query.accountnumber + '\'';
