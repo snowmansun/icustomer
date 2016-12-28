@@ -17,6 +17,7 @@ router.post('/', function (req, res) {
                 '      ebmobile__guid__c,' +
                 '      accountid,' +
                 '      TYPE,' +
+                '      ebmobile__ordersource__c,' +
                 '      ebmobile__orderdate__c,' +
                 '      ebMobile__TotalQuantity__c,' +
                 '      ebmobile__totalquantitycs__c,' +
@@ -26,7 +27,7 @@ router.post('/', function (req, res) {
                 '      ebmobile__taxamount__c,' +
                 '      ebmobile__netamount__c,' +
                 '      ebmobile__discamount__c,' +
-                '      ebmobile__deliverydate__c,' +
+                '      ebmobile__reqdeliverydate__c,' +
                 '      ebmobile__deliverynotes__c,' +
                 '      Status,' +
                 '      ebmobile__isactive__c, ' +
@@ -36,7 +37,9 @@ router.post('/', function (req, res) {
                 '        \'' + guid + '\',' +
                 '        \'' + req.body.outlet_id + '\',' +
                 '        \'' + req.body.order_type + '\',' +
-                '        \'' + new Date(req.body.order_date).toISOString() + '\',' +
+                '        \'iCustomer\','+
+                //'        \'' + new Date(req.body.order_date).toISOString() + '\',' +
+                '        \'' + req.body.order_date + '\',' +
                 '        ' + req.body.qty + ',' +
                 '        ' + req.body.qty_cs + ',' +
                 '        ' + req.body.qty_ea + ',' +
@@ -45,7 +48,8 @@ router.post('/', function (req, res) {
                 '        ' + req.body.tax + ',' +
                 '        ' + req.body.net_price + ',' +
                 '        ' + req.body.discount + ',' +
-                '        \'' + new Date(req.body.delivery_date).toISOString() + '\',' +
+                //'        \'' + new Date(req.body.delivery_date).toISOString() + '\',' +
+                '        \'' + req.body.order_date + '\',' +
                 '        \'' + req.body.delivery_note + '\',' +
                 '        \'' + req.body.status + '\',' +
                 '        TRUE,' +
@@ -80,7 +84,8 @@ router.post('/', function (req, res) {
                                 '   values(\'' + req.body.order_no + '\',' +
                                 '          \'' + req.body.order_no + '\',' +
                                 '          \'' + pId + '\',' +
-                                '          \'' + new Date(req.body.order_date).toISOString() + '\',' +
+                                //'          \'' + new Date(req.body.order_date).toISOString() + '\',' +
+                                '          \'' + req.body.order_date + '\',' +
                                 '          \'' + item.uom_code + '\',' +
                                 '          \'' + item.qty + '\',' +
                                 '          \'' + item.qty + '\',' +
@@ -151,7 +156,7 @@ router.get('/download', function (req, res) {
         '     o.ebmobile__taxamount__c tax, ' +
         '     o.ebmobile__netamount__c net_price, ' +
         '     o.ebmobile__discamount__c discount, ' +
-        '     o.ebmobile__deliverydate__c delivery_date, ' +
+        '     o.ebmobile__reqdeliverydate__c  delivery_date, ' +
         '     o.ebmobile__deliverynotes__c delivery_note, ' +
         '     o.Status status, ' +
 
@@ -221,7 +226,8 @@ router.get('/download', function (req, res) {
                         "outlet_id": row.outlet_id,
                         "order_type": row.order_type,
                         "user_code": row.user_code,
-                        "order_date": new Date(row.order_date).toLocaleString(),
+                        //"order_date": new Date(row.order_date).toLocaleString(),
+                        "order_date": row.order_date,
                         "qty": row.qty,
                         "qty_cs": row.qty_cs,
                         "qty_ea": row.qty_ea,
@@ -229,7 +235,8 @@ router.get('/download', function (req, res) {
                         "tax": row.tax,
                         "net_price": row.net_price,
                         "discount": row.discount,
-                        "delivery_date": new Date(row.delivery_date).toLocaleString(),
+                        //"delivery_date": new Date(row.delivery_date).toLocaleString(),
+                        "delivery_date": row.delivery_date,
                         "delivery_note": row.delivery_note,
                         "status": row.status,
 
