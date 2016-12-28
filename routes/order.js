@@ -37,7 +37,7 @@ router.post('/', function (req, res) {
                 '        \'' + guid + '\',' +
                 '        \'' + req.body.outlet_id + '\',' +
                 '        \'' + req.body.order_type + '\',' +
-                '        \'iCustomer\','+
+                '        \'' + req.body.ordersource + '\',' +
                 //'        \'' + new Date(req.body.order_date).toISOString() + '\',' +
                 '        \'' + req.body.order_date + '\',' +
                 '        ' + req.body.qty + ',' +

@@ -19,7 +19,8 @@ router.get('/list', function (req, res) {
         //'   \'00P2800000208xQEAQ\' as pic,' +
         '   p.baseprice__c as price,' +
         '   case when mh.ebmobile__product__c is not null then 1 else 0 end as isMusttohave, ' +
-        '   case when oi.ebmobile__product2__c is not null then 1 else 0 end as isHistorySku ' +
+        '   case when oi.ebmobile__product2__c is not null then 1 else 0 end as isHistorySku, ' +
+        '   rsp.ebmobile__rsp__c revenue_ea '+
         'FROM' +
         '   sfdc5sqas.product2 p '+
         '   inner join sfdc5sqas.ebmobile__productuom__c uom on p.sfid = uom.ebmobile__productid__c and uom.ebmobile__isactive__c=true and ebmobile__uomcode__c= \'EA\' ' +
@@ -31,6 +32,14 @@ router.get('/list', function (req, res) {
         '       inner join sfdc5sqas.account ac on ac.sfid=agi.ebmobile__account__c '+
         '       where ac.accountnumber = \'' + req.query.accountnumber + '\' ' +
         '   ) mh on mh.ebmobile__Product__c = p.sfid  ' +
+        '   left join ( '+
+        '       select distinct pr.ebmobile__productid__c, pr.ebmobile__rsp__c ' +
+        '       from sfdc5sqas.ebmobile__accountgroupitem__c agi  ' +
+        '       inner join sfdc5sqas.ebmobile__accountgroup__c ag on agi.ebmobile__accountgroup__c = ag.sfid and ag.ebmobile__type__c = \'RED Survey\' '+
+        '       inner join sfdc5sqas.account ac on ac.sfid = agi.ebmobile__account__c ' +
+        '       inner join sfdc5sqas.ebmobile__productrsp__c pr on pr.ebmobile__accountgroupid__c = ag.sfid ' +
+        '       where ac.accountnumber = \'' + req.query.accountnumber+'\' '+
+        '   ) rsp on rsp.ebmobile__productid__c = p.sfid '+
         '   left join ( '+
         '       select distinct oi.ebmobile__product2__c '+
         '       from sfdc5sqas.orderitem oi ' +
@@ -63,15 +72,10 @@ router.get('/list', function (req, res) {
         }).catch(function (err) {
             console.error(err);
         });
-
-
 });
 
 /* GET home page. */
 router.get('/attr', function (req, res) {
-    //var sql_brand = 'SELECT DISTINCT ebmobile__brand__c as name,null as pic from sfdc5sqas.product2 where ebmobile__brand__c is not NULL';
-    //var sql_flavor = 'SELECT DISTINCT ebmobile__flavor__c as name,null as pic from sfdc5sqas.product2 where ebmobile__flavor__c is not NULL';
-    //var sql_pack = 'SELECT DISTINCT ebmobile__pack__c as name,null as pic from sfdc5sqas.product2 where ebmobile__pack__c is not NULL';
     var sql_brand = 
         'SELECT ebMobile__PicklistValue__c "name", am.sfid pic ' +
         'FROM sfdc5sqas.ebMobile__PickListMaster__c pm ' +
