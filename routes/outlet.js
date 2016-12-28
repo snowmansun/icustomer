@@ -24,7 +24,7 @@ router.get('/info', function (req, res) {
         if (result.rows.length > 0) {
             query = 'select am.sfid as pic' +
                 ' from sfdc5sqas.ebmobile__accountgroupitem__c agi' +
-                ' inner join sfdc5sqas.ebmobile__accountgroup__c ag on agi.ebmobile__accountgroup__c = ag.sfid and ag.ebmobile__type__c = \'RED Survey\'' +
+                ' inner join sfdc5sqas.ebmobile__accountgroup__c ag on agi.ebmobile__accountgroup__c = ag.sfid and ag.ebmobile__type__c = \'AD\'' +
                 ' inner join sfdc5sqas.attachment am on ag.sfid = am.parentid and am."name" like \'AD_%\'' +
                 ' where agi.ebmobile__account__c = \'' + result.rows[0].outlet_id + '\'';
             db.query(query).then(function (resPic) {
