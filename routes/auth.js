@@ -32,7 +32,9 @@ router.post('/login', function (req, res) {
             user_info: {
                 uid: '00128000009h94AAAQ',
                 accountid: result.rows[0].accountid,//'Frank Schneider',
-                name: result.rows[0].customername,//'Frank Schneider',
+                firstname: result.rows[0].firstname,//'Frank Schneider',
+                lastname: result.rows[0].lastname,//'Frank Schneider',
+                customername: result.rows[0].customername,//'Frank Schneider',
                 salesrepphone: result.rows[0].salesrepphone,//'18300000000',
                 mobile: result.rows[0].mobilephone,//'18300000000',
                 tel: result.rows[0].phone,//'021-64682167',
